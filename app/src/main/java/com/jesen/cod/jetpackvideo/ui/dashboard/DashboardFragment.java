@@ -13,22 +13,21 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jesen.cod.jetpackvideo.R;
-import com.jesen.cod.jetpackvideo.databinding.FragmentDashboardBinding;
+import com.jesen.cod.libnavannotation.FragmentDestination;
 
+@FragmentDestination(pageUrl = "main/tabs/dash", asStarter = false)
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View root = inflater.inflate(R.layout.fragment_dashboard, container,false);
 
-        final TextView textView = binding.textDashboard;
+        final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -41,6 +40,5 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
