@@ -1,0 +1,9 @@
+rootProject.name = "JetpackVideo"
+include ':app'
+include ':lib_nav_annotation'
+include ':lib_nav_compiler'
+include ':lib_nav_annotation'
+include ':lib_nav_compiler'
+include ':libnmabi'
+include ':libnavcompiler'
+include ':libnavannotation'
