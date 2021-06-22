@@ -23,6 +23,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="JetpackVideo.app" target="1.8" />
       <module name="JetpackVideo.libnavcompiler" target="1.8" />
+      <module name="JetpackVideo.libnetwork" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
