@@ -28,7 +28,7 @@ import java.util.List;
 
 public class AppBottomBar extends BottomNavigationView {
 
-    private static final int[] icons = {R.drawable.ic_home_24, R.drawable.ic_sofa_flat_24,
+    private static final int[] icons = {R.drawable.ic_home_24, R.drawable.ic_sofa_toll_24,
             R.drawable.ic_publish_add_48, R.drawable.ic_find_24, R.drawable.ic_mine_24};
 
     private BottomBar config;
@@ -68,18 +68,25 @@ public class AppBottomBar extends BottomNavigationView {
             if (!tab.enable) {
                 continue; // 底部导航栏不展示该项
             }
-            int id = getId(tab.pageUrl);
-            if (id < 0) {
+            int itemId = getItemId(tab.pageUrl);
+            if (itemId < 0) {
                 continue;
             }
 
-            MenuItem item = getMenu().add(0, id, tab.index, tab.title);
-            item.setIcon(icons[tab.index]);
+            MenuItem menuItem = getMenu().add(0, itemId, tab.index, tab.title);
+            menuItem.setIcon(icons[tab.index]);
         }
         // 必须添加完后才可以调整icon的尺寸
         for (int i = 0; i < tabs.size(); i++) {
             BottomBar.Tabs tab = tabs.get(i);
-            int iconSize = dp2px(tabs.size());
+            if (!tab.enable){
+                continue;
+            }
+            int itemId = getItemId(tab.pageUrl);
+            if (itemId < 0){
+                continue;
+            }
+            int iconSize = dp2px(tab.size);
             BottomNavigationMenuView menuView = (BottomNavigationMenuView) getChildAt(0);
             BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(tab.index);
             itemView.setIconSize(iconSize);
@@ -96,7 +103,7 @@ public class AppBottomBar extends BottomNavigationView {
         return (int) (metrics.density * dpValue + 0.5f);
     }
 
-    private int getId(String pageUrl) {
+    private int getItemId(String pageUrl) {
         Destination destination = AppConfig.getDestConfig().get(pageUrl);
         if (destination == null) {
             return -1;

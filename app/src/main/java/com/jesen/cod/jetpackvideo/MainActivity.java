@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         navController = NavHostFragment.findNavController(fragment);
 
-        NavGraphBuilder.build(navController);
+        //NavGraphBuilder.build(navController);
+        NavGraphBuilder.build(navController, this, fragment.getId());
         navView.setOnNavigationItemSelectedListener(this);
     }
 
