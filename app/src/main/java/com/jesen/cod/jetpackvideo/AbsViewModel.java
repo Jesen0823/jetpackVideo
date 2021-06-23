@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class AbsViewModel<T> extends ViewModel {
 
+    private PagedList.Config config;
+
     private DataSource dataSource;
 
     private LiveData<PagedList<T>> pagedListLiveData;
@@ -19,7 +21,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
     private MutableLiveData<Boolean> boundaryPageData = new MutableLiveData<>();
 
     public AbsViewModel() {
-        PagedList.Config config = new PagedList.Config.Builder()
+         config = new PagedList.Config.Builder()
                 // 分页每页加载数量
                 .setPageSize(10)
                 // 分页第一次加载数量
@@ -52,6 +54,9 @@ public abstract class AbsViewModel<T> extends ViewModel {
         return boundaryPageData;
     }
 
+    //PagedList数据被加载 情况的边界回调callback
+    //但 不是每一次分页 都会回调这里，具体请看 ContiguousPagedList#mReceiver#onPageResult
+    //deferBoundaryCallbacks
     PagedList.BoundaryCallback<T> callback = new PagedList.BoundaryCallback<T>() {
         // 返回0条数据
         @Override
@@ -68,7 +73,6 @@ public abstract class AbsViewModel<T> extends ViewModel {
         // pageList的最后一条数据被加载
         @Override
         public void onItemAtEndLoaded(@NonNull @NotNull T itemAtEnd) {
-            super.onItemAtEndLoaded(itemAtEnd);
         }
     };
 
@@ -77,11 +81,19 @@ public abstract class AbsViewModel<T> extends ViewModel {
         @NotNull
         @Override
         public DataSource create() {
-            dataSource = createDataSource();
+            if (dataSource == null || dataSource.isInvalid()) {
+                dataSource = createDataSource();
+            }
             return dataSource;
         }
     };
 
     public abstract DataSource createDataSource();
+
+    //可以在这个方法里 做一些清理 的工作
+    @Override
+    protected void onCleared() {
+
+    }
 }
 

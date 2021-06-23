@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.view.AbsListFragment;
+import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libnavannotation.FragmentDestination;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
@@ -27,13 +28,18 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     private HomeViewModel homeViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        return null;
+    public static HomeFragment newInstance(String feedType) {
+        Bundle args = new Bundle();
+        args.putString("feedType", feedType);
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     protected void afterCreateView() {
+        Og.d("HomeFragment, afterCreateView");
+
 
     }
 

@@ -2,6 +2,9 @@ package com.jesen.cod.libnetwork;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -70,19 +73,21 @@ public class ApiService {
 
     }
 
-    public static void init(String baseUrl, Convert convert){
+    public static void init(String baseUrl, Convert convert) {
         mBaseUrl = baseUrl;
-        if (convert == null){
+        if (convert == null) {
             convert = new JsonConvert();
         }
         mConvert = convert;
     }
 
-    public static <T> GetRequest<T> get(String url){
-        return new GetRequest<>(mBaseUrl+url);
+    @NotNull
+    @Contract("_ -> new")
+    public static <T> GetRequest<T> get(String url) {
+        return new GetRequest<>(mBaseUrl + url);
     }
 
-    public <T> PostRequest<T> post(String url){
+    public <T> PostRequest<T> post(String url) {
         return new PostRequest<>(url);
     }
 }

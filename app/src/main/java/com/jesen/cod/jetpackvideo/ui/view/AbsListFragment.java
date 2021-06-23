@@ -90,6 +90,7 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+        Og.d("AbsListFragment, onViewCreated");
         Type[] arguments = type.getActualTypeArguments();
         if (arguments.length > 1){
             Type argument =  arguments[1];

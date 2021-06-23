@@ -40,7 +40,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
 
     @Override
     public DataSource createDataSource() {
-        return null;
+        return mDataSource;
     }
 
     ItemKeyedDataSource<Integer,Feed> mDataSource = new ItemKeyedDataSource<Integer, Feed>() {
@@ -88,7 +88,6 @@ public class HomeViewModel extends AbsViewModel<Feed> {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
                     super.onCacheSuccess(response);
-                    Og.d("onCacheSuccess bodysize:"+response.body.size());
                 }
             });
         }
@@ -98,6 +97,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             requestNet.cacheStrategy(key == 0? Request.NET_CACHE:Request.NET_ONLY);
             ApiResponse<List<Feed>> response = requestNet.execute();
             List<Feed> data = response.body == null? Collections.emptyList():response.body;
+            Og.d("response.body size:"+response.body.size());
             callback.onResult(data);
 
             if (key > 0){
