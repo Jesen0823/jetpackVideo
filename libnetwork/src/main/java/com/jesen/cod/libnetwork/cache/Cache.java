@@ -9,6 +9,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.TypeConverters;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,9 +24,10 @@ import java.util.Date;
 @Entity(tableName = "cache")
 public class Cache implements Serializable {
 
-    // 主键约束
-    @PrimaryKey
-    @Ignore // Ignore会忽略该字段，不会出现在创建的数据库列名中
+    //PrimaryKey 必须要有,且不为空,autoGenerate 主键的值是否由Room自动生成,默认false
+    @PrimaryKey(autoGenerate = false)
+    //@Ignore // Ignore会忽略该字段，不会出现在创建的数据库列名中
+    @NonNull
     public String key;
 
     // 自增主键
