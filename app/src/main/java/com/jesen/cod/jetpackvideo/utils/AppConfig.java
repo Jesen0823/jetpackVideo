@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.jesen.cod.jetpackvideo.model.BottomBar;
 import com.jesen.cod.jetpackvideo.model.Destination;
+import com.jesen.cod.libcommon.JetAppGlobal;
 
 import java.io.BufferedReader;
 import java.io.IOException;

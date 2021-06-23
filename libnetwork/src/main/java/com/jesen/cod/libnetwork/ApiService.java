@@ -77,4 +77,12 @@ public class ApiService {
         }
         mConvert = convert;
     }
+
+    public static <T> GetRequest<T> get(String url){
+        return new GetRequest<>(mBaseUrl+url);
+    }
+
+    public <T> PostRequest<T> post(String url){
+        return new PostRequest<>(url);
+    }
 }

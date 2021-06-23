@@ -13,7 +13,7 @@ public class JetAppGlobal {
             try {
                 Method method = Class.forName("android.app.ActivityThread")
                         .getDeclaredMethod("currentApplication");
-                mApplication = (Application) method.invoke(null, null);
+                mApplication = (Application) method.invoke(null, new  Object[]{});
 
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();

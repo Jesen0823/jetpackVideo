@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.jesen.cod.jetpackvideo.BR;
+
 import java.io.Serializable;
 
 public class User extends BaseObservable implements Serializable {
@@ -77,7 +79,7 @@ public class User extends BaseObservable implements Serializable {
 
     public void setHasFollow(boolean hasFollow) {
         this.hasFollow = hasFollow;
-        notifyPropertyChanged(com.mooc.ppjoke.BR._all);
+        notifyPropertyChanged(BR._all);
     }
 }
 

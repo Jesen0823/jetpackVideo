@@ -1,11 +1,12 @@
 package com.jesen.cod.libnetwork;
 
 import android.annotation.SuppressLint;
-import android.arch.core.executor.ArchTaskExecutor;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.arch.core.executor.ArchTaskExecutor;
 
 import com.jesen.cod.libnetwork.cache.CacheManager;
 
@@ -226,5 +227,11 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     private String generateCacheKey() {
         cacheKey = UrlCreator.createUrlFromParams(mUrl, params);
         return cacheKey;
+    }
+
+    @NonNull
+    @Override
+    public Request clone() throws CloneNotSupportedException {
+        return (Request<T, R>) super.clone();
     }
 }

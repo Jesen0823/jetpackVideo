@@ -3,7 +3,8 @@ package com.jesen.cod.jetpackvideo.model;
 import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
+
+import com.jesen.cod.jetpackvideo.BR;
 
 import java.io.Serializable;
 

@@ -12,6 +12,7 @@ import androidx.navigation.fragment.FragmentNavigator;
 
 import com.jesen.cod.jetpackvideo.FixFragmentNavigator;
 import com.jesen.cod.jetpackvideo.model.Destination;
+import com.jesen.cod.libcommon.JetAppGlobal;
 import com.jesen.cod.libnavannotation.FragmentDestination;
 
 import java.util.HashMap;
