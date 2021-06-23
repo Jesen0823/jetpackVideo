@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+        android:id="@+id/blur_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tool:background="@color/purple_500"/>
+
+    <!-- 真正能够播放展示视频画面的view  会动态的添加到这里-->
+
+    <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+        android:id="@+id/cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/play_btn"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_gravity="center"
+        android:src="@drawable/icon_video_play"/>
+
+    <!-- 视频播放时的底部进度条,根据判断哪一个布局正在播放会动态添加进度条-->
+
+    <!-- loading view -->
+    <ProgressBar
+        android:id="@+id/buffer_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminateTint="@color/purple_200"/>
+</FrameLayout>
