@@ -1,17 +1,21 @@
 package com.jesen.cod.jetpackvideo.ui.home;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
+import androidx.paging.PagedList;
 
 import com.alibaba.fastjson.TypeReference;
 import com.jesen.cod.jetpackvideo.AbsViewModel;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.MutablePageKeyedDataSource;
 import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
@@ -23,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeViewModel extends AbsViewModel<Feed> {
 
@@ -37,6 +42,9 @@ public class HomeViewModel extends AbsViewModel<Feed> {
     * */
 
     private volatile boolean withCache = true;
+    private MutableLiveData<PagedList<Feed>>  cacheLiveData = new MutableLiveData<>();
+    // 同步位标记，防止数据重复
+    private AtomicBoolean loadAfter = new AtomicBoolean(false);
 
     @Override
     public DataSource createDataSource() {
@@ -72,6 +80,9 @@ public class HomeViewModel extends AbsViewModel<Feed> {
     };
 
     private void loadData(int key, ItemKeyedDataSource.LoadCallback<Feed> callback) {
+        if (key > 0){ // 不加载分页
+            loadAfter.set(true);
+        }
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParams("feedType", null)
                 .addParams("userId", 0)
@@ -87,7 +98,11 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             request.execute(new JsonCallback<List<Feed>>() {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
-                    List<Feed> body = response.body;
+                    MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource<Feed>();
+                    dataSource.data.addAll(response.body);
+
+                    PagedList pagedList = dataSource.buildNewPageList(config);
+                    cacheLiveData.postValue(pagedList);
                 }
             });
         }
@@ -103,10 +118,29 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             if (key > 0){
                 // 通过LiveData发送数据，告诉UI层是否应该主动关闭上拉加载分页的动画
                 getBoundaryPageData().postValue(data.size()>0);
+                loadAfter.set(false);
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+        Og.d("loadData, key = "+key);
     }
 
+    public MutableLiveData<PagedList<Feed>> getCacheLiveData() {
+        return cacheLiveData;
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void loadAfter(int id, ItemKeyedDataSource.LoadCallback<Feed> feedLoadCallback) {
+        if (loadAfter.get()){
+            feedLoadCallback.onResult(Collections.emptyList());
+            return;
+        }
+        ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                loadData(id, feedLoadCallback);
+            }
+        });
+    }
 }

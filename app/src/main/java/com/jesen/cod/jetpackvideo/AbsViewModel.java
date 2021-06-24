@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class AbsViewModel<T> extends ViewModel {
 
-    private PagedList.Config config;
+    protected PagedList.Config config;
 
     private DataSource dataSource;
 
