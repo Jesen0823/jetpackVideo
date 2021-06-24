@@ -54,4 +54,7 @@ dependencies {
 
     implementation project(":libnetwork")
     implementation project(":libcommon")
+
+    //QQ快捷登录
+    implementation files('libs/open_sdk_r6140_lite.jar')
 }

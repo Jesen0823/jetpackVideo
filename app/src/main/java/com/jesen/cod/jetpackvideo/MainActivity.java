@@ -5,20 +5,26 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenuItemView;
+import com.jesen.cod.jetpackvideo.model.Destination;
+import com.jesen.cod.jetpackvideo.model.User;
+import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.ui.view.AppBottomBar;
+import com.jesen.cod.jetpackvideo.utils.AppConfig;
 import com.jesen.cod.jetpackvideo.utils.NavGraphBuilder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * App 主页 入口
  * <p>
@@ -31,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private NavController navController;
-    private BottomNavigationView navView;
+    private AppBottomBar navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setContentView(R.layout.activity_main);
 
-         navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -53,6 +59,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+        HashMap<String, Destination> destConfig = AppConfig.getDestConfig();
+        Iterator<Map.Entry<String, Destination>> iterator = destConfig.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Destination> entry = iterator.next();
+            Destination value = entry.getValue();
+            if (value != null && !UserManager.get().isLogin() && value.needLogin && value.id
+                    == item.getItemId()) {
+                UserManager.get().login(this).observe(this, new Observer<User>() {
+                    @Override
+                    public void onChanged(User user) {
+                        // 登录完成后跳回
+                        navView.setSelectedItemId(item.getItemId());
+                    }
+                });
+                return false;
+            }
+        }
+
         navController.navigate(item.getItemId());
         return !TextUtils.isEmpty(item.getTitle());
     }
