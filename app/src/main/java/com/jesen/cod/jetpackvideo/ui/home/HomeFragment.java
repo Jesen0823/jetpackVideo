@@ -56,7 +56,9 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     @Override
     public void onRefresh(@NotNull RefreshLayout refreshLayout) {
-
+        //invalidate 之后Paging会重新创建一个DataSource 重新调用它的loadInitial方法加载初始化数据
+        //详情见：LivePagedListBuilder#compute方法
+        mViewModel.getDataSource().invalidate();
     }
 
     @Override

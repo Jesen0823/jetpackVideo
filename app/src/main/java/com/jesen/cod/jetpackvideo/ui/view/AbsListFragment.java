@@ -42,7 +42,7 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
     private SmartRefreshLayout mRefreshLayout;
     private EmptyView mEmptyView;
     private PagedListAdapter<T, RecyclerView.ViewHolder> mAdapter;
-    private M mViewModel;
+    protected M mViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable

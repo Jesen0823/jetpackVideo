@@ -3,6 +3,7 @@ package com.jesen.cod.jetpackvideo;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
@@ -40,6 +41,13 @@ public abstract class AbsViewModel<T> extends ViewModel {
                 // 监听PageList数据加载的状况
                 .setBoundaryCallback(callback)
                 .build();
+
+        pagedListLiveData.observeForever(new Observer<PagedList<T>>() {
+            @Override
+            public void onChanged(PagedList<T> pagedList) {
+                //adapter.submitList();
+            }
+        });
     }
 
     public LiveData<PagedList<T>> getPagedListLiveData() {
