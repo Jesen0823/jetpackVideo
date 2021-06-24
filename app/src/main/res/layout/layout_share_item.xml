@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+        android:id="@+id/share_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/content_empty"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        tools:text = "微信"/>
+
+</LinearLayout>

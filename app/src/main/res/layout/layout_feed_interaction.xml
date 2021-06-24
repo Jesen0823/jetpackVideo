@@ -9,6 +9,7 @@
             name="feed"
             type="Feed" />
 
+        <!-- FeedAdapter中bindData()传入 -->
         <variable
             name="lifeCycleOwner"
             type="androidx.lifecycle.LifecycleOwner" />
@@ -16,6 +17,8 @@
         <import type="com.jesen.cod.jetpackvideo.model.Feed"></import>
 
         <import type="com.jesen.cod.jetpackvideo.utils.StringConvert"></import>
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
 
         <import type="android.content.Context" />
 
@@ -39,6 +42,7 @@
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
             app:cornerRadius="0dp"
+            android:onClick="@{()->InteractionPresenter.toggleFeedLike(lifeCycleOwner,feed)}"
             app:icon="@{feed.ugc.hasLiked?@drawable/icon_like_selected:@drawable/icon_like}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
@@ -59,6 +63,7 @@
             android:textSize="@dimen/sp_14"
             app:backgroundTint="@color/color_white"
             app:cornerRadius="0dp"
+            android:onClick="@{()->InteractionPresenter.toggleFeedDisLike(lifeCycleOwner,feed)}"
             app:icon="@{feed.ugc.hasdiss?@drawable/discuss_oppose_s:@drawable/discuss_oppose}"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
@@ -94,6 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="@{()->InteractionPresenter.openShare(((Context)lifeCycleOwner),feed)}"
             android:text="@{feed.ugc.shareCount>0?StringConvert.convertFeedUgc(feed.ugc.shareCount):@string/share}"
             android:textColor="@color/color_3d3"
             android:textSize="@dimen/sp_14"

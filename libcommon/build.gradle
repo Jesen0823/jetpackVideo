@@ -47,6 +47,8 @@ dependencies {
     api 'jp.wasabeef:glide-transformations:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
+    api 'org.jetbrains:annotations:15.0'
+
     //视频播放组件
     api 'com.google.android.exoplayer:exoplayer-core:2.10.4'
     api 'com.google.android.exoplayer:exoplayer-dash:2.10.4'

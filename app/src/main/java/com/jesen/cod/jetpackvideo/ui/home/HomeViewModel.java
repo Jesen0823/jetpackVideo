@@ -16,6 +16,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.jesen.cod.jetpackvideo.AbsViewModel;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.MutablePageKeyedDataSource;
+import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
@@ -85,7 +86,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         }
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParams("feedType", null)
-                .addParams("userId", 0)
+                .addParams("userId", UserManager.get().getUserId())
                 .addParams("feedId", key)
                 .addParams("pageCount", 10)
                 .responseType(
