@@ -43,51 +43,30 @@ public class HomeViewModel extends AbsViewModel<Feed> {
     * */
 
     private volatile boolean withCache = true;
+
     private MutableLiveData<PagedList<Feed>>  cacheLiveData = new MutableLiveData<>();
     // 同步位标记，防止数据重复
     private AtomicBoolean loadAfter = new AtomicBoolean(false);
+    private String mFeedType;
 
     @Override
     public DataSource createDataSource() {
-        return mDataSource;
+        return new FeedDataSource();
     }
 
-    ItemKeyedDataSource<Integer,Feed> mDataSource = new ItemKeyedDataSource<Integer, Feed>() {
-        @Override
-        public void loadInitial(@NonNull @NotNull ItemKeyedDataSource.LoadInitialParams<Integer> params, @NonNull @NotNull ItemKeyedDataSource.LoadInitialCallback<Feed> callback) {
-            // 加载初始化数据
-            loadData(0, callback);
-            withCache = false;
-        }
+    public void setFeedType(String feedType){
+        mFeedType = feedType;
+    }
 
-        @Override
-        public void loadAfter(@NonNull @NotNull ItemKeyedDataSource.LoadParams<Integer> params, @NonNull @NotNull ItemKeyedDataSource.LoadCallback<Feed> callback) {
-            // 加载分页数据
-            loadData(params.key, callback);
-        }
-
-        @Override
-        public void loadBefore(@NonNull @NotNull ItemKeyedDataSource.LoadParams<Integer> params, @NonNull @NotNull ItemKeyedDataSource.LoadCallback<Feed> callback) {
-            // 可以向前加载
-            callback.onResult(Collections.emptyList());
-        }
-
-        @NonNull
-        @NotNull
-        @Override
-        public Integer getKey(@NonNull @NotNull Feed item) {
-            return item.id;
-        }
-    };
-
-    private void loadData(int key, ItemKeyedDataSource.LoadCallback<Feed> callback) {
+    private void loadData(int key,int count, ItemKeyedDataSource.LoadCallback<Feed> callback) {
         if (key > 0){ // 不加载分页
             loadAfter.set(true);
         }
         Request request = ApiService.get("/feeds/queryHotFeedsList")
-                .addParams("feedType", null)
+                .addParams("feedType", mFeedType)
                 .addParams("userId", UserManager.get().getUserId())
                 .addParams("feedId", key)
+                .addParams("pageCount",count)
                 .addParams("pageCount", 10)
                 .responseType(
                         new TypeReference<ArrayList<Feed>>() {
@@ -99,8 +78,11 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             request.execute(new JsonCallback<List<Feed>>() {
                 @Override
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
+                    Og.d("HomeViewModel, loadData, onCacheSuccess.");
                     MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource<Feed>();
-                    dataSource.data.addAll(response.body);
+                    if(response.body != null) {
+                        dataSource.data.addAll(response.body);
+                    }
 
                     PagedList pagedList = dataSource.buildNewPageList(config);
                     cacheLiveData.postValue(pagedList);
@@ -118,7 +100,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
 
             if (key > 0){
                 // 通过LiveData发送数据，告诉UI层是否应该主动关闭上拉加载分页的动画
-                getBoundaryPageData().postValue(data.size()>0);
+                ((MutableLiveData)getBoundaryPageData()).postValue(data.size()>0);
                 loadAfter.set(false);
             }
         } catch (CloneNotSupportedException e) {
@@ -140,8 +122,38 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                loadData(id, feedLoadCallback);
+                loadData(id,config.pageSize ,feedLoadCallback);
             }
         });
+    }
+
+    class FeedDataSource extends ItemKeyedDataSource<Integer, Feed>{
+
+        @Override
+        public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Feed> callback) {
+            //加载初始化数据的
+            Log.e("homeviewmodel", "loadInitial: ");
+            loadData(0, params.requestedLoadSize, callback);
+            withCache = false;
+        }
+
+        @Override
+        public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Feed> callback) {
+            //向后加载分页数据的
+            Log.e("homeviewmodel", "loadAfter: ");
+            loadData(params.key, params.requestedLoadSize, callback);
+        }
+
+        @Override
+        public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Feed> callback) {
+            callback.onResult(Collections.emptyList());
+            //能够向前加载数据的
+        }
+
+        @NonNull
+        @Override
+        public Integer getKey(@NonNull Feed item) {
+            return item.id;
+        }
     }
 }

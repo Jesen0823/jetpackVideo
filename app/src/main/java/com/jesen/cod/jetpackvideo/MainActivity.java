@@ -11,6 +11,7 @@ import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.ui.view.AppBottomBar;
 import com.jesen.cod.jetpackvideo.utils.AppConfig;
 import com.jesen.cod.jetpackvideo.utils.NavGraphBuilder;
+import com.jesen.cod.jetpackvideo.utils.Og;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,5 +80,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         navController.navigate(item.getItemId());
         return !TextUtils.isEmpty(item.getTitle());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Og.d("MainActivity, onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Og.d("MainActivity, onRestart");
+
     }
 }
