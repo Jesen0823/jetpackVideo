@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.jesen.cod.jetpackvideo.R;
+import com.jesen.cod.jetpackvideo.model.Comment;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.ShareDialog;
@@ -40,7 +41,7 @@ public class InteractionPresenter {
 
     private static Uri shareImgUri;
 
-    private InteractionPresenter(){
+    private InteractionPresenter() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -204,14 +205,15 @@ public class InteractionPresenter {
 
                             @Override
                             public void onError(ApiResponse<JSONObject> response) {
-                                showToast(response.message);                            }
+                                showToast(response.message);
+                            }
                         });
             }
         });
         shareDialog.show();
     }
 
-    public static void toggleCommentLike(){
+    public static void toggleCommentLike() {
 
     }
 
@@ -223,5 +225,44 @@ public class InteractionPresenter {
                 Toast.makeText(JetAppGlobal.getApplication(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //给一个帖子的评论点赞/取消点赞
+    public static void toggleCommentLike(LifecycleOwner owner, Comment comment) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleCommentLikeInternal(comment);
+            }
+        })) {
+        } else {
+            toggleCommentLikeInternal(comment);
+        }
+    }
+
+    private static void toggleCommentLikeInternal(Comment comment) {
+
+        ApiService.get(URL_TOGGLE_COMMENT_LIKE)
+                .addParams("commentId", comment.commentId)
+                .addParams("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasLiked = false;
+                            try {
+                                hasLiked = response.body.getBoolean("hasLiked");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            comment.getUgc().setHasLiked(hasLiked);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
     }
 }

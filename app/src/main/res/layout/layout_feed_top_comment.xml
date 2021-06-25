@@ -17,6 +17,8 @@
 
         <import type="android.view.View"></import>
 
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
+
         <import type="com.jesen.cod.jetpackvideo.utils.StringConvert"></import>
 
     </data>
@@ -95,6 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_2"
+                    android:onClick="@{()->InteractionPresenter.toggleCommentLike(lifeCycleOwner, comment)}"
                     android:src="@{comment.ugc.hasLiked?@drawable/icon_like_selected:@drawable/icon_like}"
                     tools:src="@drawable/icon_like_selected">
 
