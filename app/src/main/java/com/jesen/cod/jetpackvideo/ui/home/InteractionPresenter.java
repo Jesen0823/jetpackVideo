@@ -2,6 +2,9 @@ package com.jesen.cod.jetpackvideo.ui.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import com.jesen.cod.jetpackvideo.ui.ShareDialog;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.utils.BitmapUtil;
 import com.jesen.cod.jetpackvideo.utils.FileUtil;
+import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libcommon.JetAppGlobal;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
@@ -41,18 +45,19 @@ public class InteractionPresenter {
 
     private static Uri shareImgUri;
 
-    private InteractionPresenter() {
+    public static void init() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                InputStream is = BitmapUtil.bitmap2InputStream(
-                        BitmapUtil.getBitmapFromResource(JetAppGlobal.getApplication(), R.mipmap.ic_launcher));
+                Bitmap bp = BitmapUtil.getIconBitmap(JetAppGlobal.getApplication(), R.mipmap.ic_launcher);
+                InputStream is = BitmapUtil.bitmap2InputStream(bp);
                 File file = FileUtil.checkFile("share_icon.png");
                 FileUtil.writeStreamToFile(is, file);
                 shareImgUri = FileUtil.getFileUri(JetAppGlobal.getApplication(), file);
             }
         }).start();
     }
+
 
     //给一个帖子点赞/取消点赞，它和给帖子点踩一踩是互斥的
     public static void toggleFeedLike(LifecycleOwner owner, Feed feed) {
@@ -184,6 +189,7 @@ public class InteractionPresenter {
 
         ShareDialog shareDialog = new ShareDialog(context);
         shareDialog.setShareContent(shareUrl);
+        Og.d("openShare, shareImgUri: "+shareImgUri);
         shareDialog.setShareImg(shareImgUri);
         shareDialog.setShareItemClickListener(new View.OnClickListener() {
             @Override
@@ -211,10 +217,6 @@ public class InteractionPresenter {
             }
         });
         shareDialog.show();
-    }
-
-    public static void toggleCommentLike() {
-
     }
 
     @SuppressLint("RestrictedApi")

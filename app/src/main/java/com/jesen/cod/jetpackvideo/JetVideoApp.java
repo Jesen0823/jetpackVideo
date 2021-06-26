@@ -2,6 +2,7 @@ package com.jesen.cod.jetpackvideo;
 
 import android.app.Application;
 
+import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.libnetwork.ApiService;
 
 public class JetVideoApp extends Application {
@@ -12,6 +13,7 @@ public class JetVideoApp extends Application {
     public void onCreate() {
         super.onCreate();
         ApiService.init(BASE_URL, null);
+        InteractionPresenter.init();
     }
 
 

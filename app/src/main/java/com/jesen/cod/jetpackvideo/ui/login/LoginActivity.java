@@ -23,6 +23,9 @@ import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String APP_ID = "101957627";
+
     private View actionClose;
     private View actionLogin;
     private Tencent tencent;
@@ -110,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void login() {
         if (tencent == null){
-            tencent = Tencent.createInstance("101794421", getApplicationContext());
+            tencent = Tencent.createInstance(APP_ID, getApplicationContext());
         }
         tencent.login(this,"all", loginListener);
     }
