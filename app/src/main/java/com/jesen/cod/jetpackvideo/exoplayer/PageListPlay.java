@@ -34,14 +34,22 @@ public class PageListPlay {
     public PageListPlay() {
         Application application = JetAppGlobal.getApplication();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(application,
+                //视频每一帧的画面如何渲染,实现默认的实现类
                 new DefaultRenderersFactory(application),
+                //视频的音视频轨道如何加载,使用默认的轨道选择器
                 new DefaultTrackSelector(),
+                //视频缓存控制逻辑,使用默认的即可
                 new DefaultLoadControl());
         mPlayerView = (PlayerView) LayoutInflater.from(application).inflate(
                 R.layout.layout_exo_player_view, null, false);
 
         mControllerView = (PlayerControlView) LayoutInflater.from(application)
                 .inflate(R.layout.layout_exo_player_controller_view, null, false);
+
+        //把播放器实例 和 playerView，controlView相关联
+        //如此视频画面才能正常显示,播放进度条才能自动更新
+        mPlayerView.setPlayer(exoPlayer);
+        mControllerView.setPlayer(exoPlayer);
     }
 
     public void release() {

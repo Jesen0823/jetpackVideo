@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jesen.cod.jetpackvideo.BR;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedTypeImageBinding;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedTypeVideoBinding;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.view.ListPlayerView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -83,25 +86,44 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ViewDataBinding mBinding;
+        public ViewDataBinding mBinding;
+        public ListPlayerView listPlayerView;
+        public ImageView feedImage;
 
-        public ViewHolder(@NonNull @NotNull View itemView, ViewDataBinding binding) {
+        public ViewHolder(@NonNull View itemView, ViewDataBinding binding) {
             super(itemView);
             mBinding = binding;
         }
 
         public void bindData(Feed item) {
-            if (mBinding instanceof LayoutFeedTypeImageBinding){
+            //这里之所以手动绑定数据的原因是 图片 和视频区域都是需要计算的
+            //而dataBinding的执行默认是延迟一帧的。
+            //当列表上下滑动的时候 ，会明显的看到宽高尺寸不对称的问题
+
+            mBinding.setVariable(BR.feed, item);
+            mBinding.setVariable(BR.lifeCycleOwner, mContext);
+            if (mBinding instanceof LayoutFeedTypeImageBinding) {
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) mBinding;
-                imageBinding.setFeed(item);
-                imageBinding.feedImage.bindData(item.cover,item.width, item.height,16);
-                imageBinding.setLifeCycleOwner((LifecycleOwner) mContext);
-            }else if (mBinding instanceof LayoutFeedTypeVideoBinding){
+                feedImage = imageBinding.feedImage;
+                imageBinding.feedImage.bindData(item.cover,item.width, item.height, 16);
+                //imageBinding.setFeed(item);
+                //imageBinding.interactionBinding.setLifeCycleOwner((LifecycleOwner) mContext);
+            } else if (mBinding instanceof LayoutFeedTypeVideoBinding) {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) mBinding;
-                videoBinding.setFeed(item);
-                videoBinding.listPlayerView.bindData(mCategory, item.width,item.height,item.cover,item.url);
-                videoBinding.setLifeCycleOwner((LifecycleOwner) mContext);
+                videoBinding.listPlayerView.bindData(mCategory, item.width, item.height, item.cover, item.url);
+                listPlayerView = videoBinding.listPlayerView;
+                //videoBinding.setFeed(item);
+                //videoBinding.interactionBinding.setLifeCycleOwner((LifecycleOwner) mContext);
             }
         }
+
+        public boolean isVideoItem() {
+            return mBinding instanceof LayoutFeedTypeVideoBinding;
+        }
+
+        public ListPlayerView getListPlayerView() {
+            return listPlayerView;
+        }
     }
+
 }
