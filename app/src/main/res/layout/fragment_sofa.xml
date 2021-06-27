@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.sofa.SofaFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.sofa.SofaFragment">
 
-</FrameLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            app:tabSelectedTextColor="@color/color_theme"
+            app:tabTextColor="@color/color_333"
+            app:tabIndicatorColor="@color/color_theme"
+            app:tabIndicatorHeight="@dimen/dp_2"
+            app:tabIndicatorFullWidth="false"
+            app:tabUnboundedRipple="true"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45">
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+        </androidx.viewpager2.widget.ViewPager2>
+    </LinearLayout>
+</layout>

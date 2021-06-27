@@ -12,6 +12,7 @@ import com.jesen.cod.jetpackvideo.ui.view.AppBottomBar;
 import com.jesen.cod.jetpackvideo.utils.AppConfig;
 import com.jesen.cod.jetpackvideo.utils.NavGraphBuilder;
 import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.jetpackvideo.utils.StatusBarUtil;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*
+        * 使得页面从状态栏处开始布局，但防止页面文字和状态栏文字重叠，需要在布局文件添加：
+        * android:fitsSystemWindows="true"
+        * */
+        StatusBarUtil.fitSystemBar(this);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
