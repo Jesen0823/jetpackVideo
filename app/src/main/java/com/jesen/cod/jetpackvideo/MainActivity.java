@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         /*
         * 使得页面从状态栏处开始布局，但防止页面文字和状态栏文字重叠，需要在布局文件添加：
         * android:fitsSystemWindows="true"

@@ -14,6 +14,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
 
+    <!-- 解决启动白屏 -->
     <style name="launcher" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/splash</item>
