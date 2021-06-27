@@ -14,12 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/launcher"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".ui.detail.FeedDetailActivity"></activity>
         <!-- 这是是QQ快捷登录SDK 里面包含但没用的 apache的类，需要在这里通过uses-library去除掉 -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        <activity android:name=".ui.login.LoginActivity"></activity>
+
+        <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.PublishActivity" />
         <activity
             android:name=".MainActivity"
@@ -29,9 +30,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- 注册SDKActivity -->
+        </activity> <!-- 注册SDKActivity -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"

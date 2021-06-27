@@ -32,23 +32,17 @@ import java.util.List;
 @FragmentDestination(pageUrl = "main/tabs/home", asStarter = true)
 public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
-    private HomeViewModel homeViewModel;
     private PageListPlayDetector playDetector;
     private static String mFeedType;
 
+
     public static HomeFragment newInstance(String feedType) {
-        mFeedType = feedType;
+       Og.d("HomeFragment, feedType: "+feedType);
         Bundle args = new Bundle();
         args.putString("feedType", feedType);
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    protected void afterCreateView() {
-
-
     }
 
     @Override
@@ -61,13 +55,13 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
             }
         });
          playDetector = new PageListPlayDetector(this, mRecyclerView);
-
+         mViewModel.setFeedType(mFeedType);
     }
 
     @Override
     public PagedListAdapter getAdapter() {
-        String feedType = getArguments() == null? "all":getArguments().getString("feedType");
-        return new FeedAdapter(getContext(), feedType){
+        mFeedType = getArguments() == null? "all":getArguments().getString("feedType");
+        return new FeedAdapter(getContext(), mFeedType){
             @Override
             public void onViewAttachedToWindow(@NonNull @NotNull FeedAdapter.ViewHolder holder) {
                 super.onViewAttachedToWindow(holder);

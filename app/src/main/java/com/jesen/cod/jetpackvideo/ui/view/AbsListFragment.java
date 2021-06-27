@@ -69,8 +69,6 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
 
         genericViewModel();
 
-        afterCreateView();
-
         return binding.getRoot();
     }
 
@@ -104,8 +102,6 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
             });
         }
     }
-
-    protected abstract void afterCreateView();
 
     /**
      * 因而 我们在 onCreateView的时候 创建了 PagedListAdapter

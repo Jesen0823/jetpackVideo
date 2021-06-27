@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="com.jesen.cod.jetpackvideo.model.Feed" />
+
+        <variable
+            name="fullScreen"
+            type="Boolean" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@{fullScreen?@color/transparent:@color/white}"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/color_divider"
+            android:visibility="@{fullScreen?View.INVISIBLE:View.VISIBLE}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/input_view"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_4"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:layout_weight="4"
+                android:background="@drawable/bg_edit_view"
+                android:gravity="center_vertical"
+                android:hint="@string/comment_hint"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="@{fullScreen?@color/color_white:@color/color_333}"
+                android:textColorHint="@{fullScreen?@color/color_white:@color/color_333}"
+                android:textSize="12sp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:backgroundTint="@{feed.ugc.hasLiked?@color/color_theme:fullScreen?@color/color_white:@color/color_666}"
+                    android:background="@{feed.ugc.hasLiked?@drawable/detail_praise_s:@drawable/detail_praise}"
+                    tools:src="@drawable/detail_praise"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@{feed.ugc.likeCount>0?String.valueOf(feed.ugc.likeCount):@string/like}"
+                    android:textColor="@{feed.ugc.hasLiked?@color/color_theme:fullScreen?@color/color_white:@color/color_666}"
+                    tools:text="赞"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:backgroundTint="@{feed.ugc.hasFavorite?@color/color_theme:fullScreen?@color/color_white:@color/color_666}"
+                    android:background="@{feed.ugc.hasFavorite?@drawable/detail_collect_s:@drawable/detail_collect}"
+                    tools:src="@drawable/detail_collect"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@{feed.ugc.hasFavorite?@string/has_collect:@string/collect}"
+                    android:textColor="@{feed.ugc.hasFavorite?@color/color_theme:fullScreen?@color/color_white:@color/color_666}"
+                    tools:text="收藏"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:backgroundTint="@{fullScreen?@color/color_white:@color/color_666}"
+                    android:background="@drawable/detail_share" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/share"
+                    android:textColor="@{fullScreen?@color/color_white:@color/color_666}"
+                    tools:text="分享"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

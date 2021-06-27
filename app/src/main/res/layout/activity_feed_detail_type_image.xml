@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="feed"
+            type="com.jesen.cod.jetpackvideo.model.Feed" />
+
+        <import type="com.jesen.cod.libcommon.utils.PixUtils"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/dp_16"
+                android:src="@drawable/ic_back_detail"
+                android:paddingRight="@dimen/dp_16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dp_16"
+                android:textColor="@color/color_000"
+                android:text="@string/feed_detail_type_image_title"
+                android:gravity="center" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/color_gray2"
+                android:layout_gravity="bottom" />
+
+            <include layout="@layout/activity_feed_detail_author_info"
+                android:id="@+id/detail_author_info_layout"
+                app:leftMargin="@{PixUtils.dp2px(60)}"
+                android:visibility="gone"
+                app:fullScreen="@{false}"
+                app:feed="@{feed}"/>
+
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:layout_weight="1"/>
+
+        <include layout="@layout/layout_feed_detail_bottom_interaction"
+            android:id="@+id/bottom_interaction_layout"
+            app:feed="@{feed}"
+            app:fullScreen="@{false}"/>
+    </LinearLayout>
+</layout>

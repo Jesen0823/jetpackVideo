@@ -77,6 +77,7 @@ public class SofaFragment extends Fragment {
                 Fragment fragment = mFragmentMap.get(position);
                 if (fragment == null){
                     fragment = getTabFragment(position);
+                    mFragmentMap.put(position, fragment);
                 }
                 return fragment;
             }
@@ -86,6 +87,8 @@ public class SofaFragment extends Fragment {
                 return tabs.size();
             }
         });
+
+        tabLayout.setTabGravity(tabConfig.tabGravity);
 
          mediator = new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -101,7 +104,7 @@ public class SofaFragment extends Fragment {
         viewPager.post(new Runnable() {
             @Override
             public void run() {
-                viewPager.setCurrentItem(tabConfig.select);
+                viewPager.setCurrentItem(tabConfig.select, false);
             }
         });
     }
@@ -120,9 +123,7 @@ public class SofaFragment extends Fragment {
                     customView.setTextSize(tabConfig.normalSize);
                     customView.setTypeface(Typeface.DEFAULT);
                 }
-
             }
-
         }
     };
 
@@ -146,6 +147,18 @@ public class SofaFragment extends Fragment {
 
     private SofaTab getTabConfig() {
         return AppConfig.getSofaTabConfig();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment.isAdded() && fragment.isVisible()){
+                fragment.onHiddenChanged(hidden);
+                break;
+            }
+        }
     }
 
     @Override
