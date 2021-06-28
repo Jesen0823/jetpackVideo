@@ -13,7 +13,12 @@
         <variable
             name="fullScreen"
             type="Boolean" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
         <import type="com.jesen.cod.jetpackvideo.utils.TimeUtils"/>
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,6 +80,7 @@
             android:textSize="@dimen/sp_14"
             android:textColor="@color/white"
             android:backgroundTint="@{fullScreen?@color/transparent:@color/color_theme}"
+            android:onClick="@{()->InteractionPresenter.toggleFollowUser(owner,feed)}"
             app:cornerRadius="@dimen/dp_13"
             app:strokeWidth="@dimen/dp_2"
             app:strokeColor="@color/color_white"

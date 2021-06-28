@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedListAdapter;
@@ -15,10 +16,14 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jesen.cod.jetpackvideo.BR;
+import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedTypeImageBinding;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedTypeVideoBinding;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.detail.FeedDetailActivity;
 import com.jesen.cod.jetpackvideo.ui.view.ListPlayerView;
+import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 * 2. 监听PageList数据的变更，AsyncPageListDiffer会回调insert,remove,changed,通过UpdateCallback中转
 *
 * */
-public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
+public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolder> {
 
     private  String mCategory;
     private LayoutInflater mLayoutInflater;
@@ -56,18 +61,19 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    protected FeedAdapter(@NonNull @NotNull AsyncDifferConfig<Feed> config) {
-        super(config);
-    }
-
     @Override
-    public int getItemViewType(int position) {
-        Feed item = getItem(position);
-        return item.itemType;
+    public int getItemViewType2(int position) {
+        Feed feed = getItem(position);
+        if (feed.itemType == Feed.TYPE_IMAGE_TEXT) {
+            return R.layout.layout_feed_type_image;
+        } else if (feed.itemType == Feed.TYPE_VIDEO) {
+            return R.layout.layout_feed_type_video;
+        }
+        return 0;
     }
 
     @NonNull
-    @NotNull
+   /* @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         ViewDataBinding binding = null;
@@ -78,11 +84,38 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
              binding = LayoutFeedTypeVideoBinding.inflate(mLayoutInflater);
         }
         return new ViewHolder(binding.getRoot(), binding);
-    }
+    }*/
 
     @Override
+    protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
+        ViewDataBinding binding = DataBindingUtil.inflate(mLayoutInflater, viewType, parent, false);
+        return new ViewHolder(binding.getRoot(), binding);
+    }
+
+    /*@Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         holder.bindData(getItem(position));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Og.i("item click, go detail page.");
+                FeedDetailActivity.startFeedDetailActivity(mContext, getItem(position),mCategory);
+            }
+        });
+    }*/
+
+    @Override
+    protected void onBindViewHolder2(ViewHolder holder, int position) {
+        holder.bindData(getItem(position));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Og.i("item click, go detail page.");
+                FeedDetailActivity.startFeedDetailActivity(mContext, getItem(position),mCategory);
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

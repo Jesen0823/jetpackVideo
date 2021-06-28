@@ -12,7 +12,14 @@
             name="fullScreen"
             type="Boolean" />
 
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
         <import type="android.view.View" />
+        <import type="android.content.Context"/>
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
+
     </data>
 
     <LinearLayout
@@ -54,6 +61,7 @@
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="@{()->InteractionPresenter.toggleFeedLike(owner,feed)}"
                 android:gravity="center">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
@@ -77,6 +85,7 @@
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="@{()->InteractionPresenter.toggleFeedFavorite(owner,feed)}"
                 android:gravity="center">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
@@ -100,7 +109,8 @@
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:onClick="@{()->InteractionPresenter.openShare((Context)owner, feed)}">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

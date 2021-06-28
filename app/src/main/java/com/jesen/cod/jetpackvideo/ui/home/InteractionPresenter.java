@@ -9,9 +9,11 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.jesen.cod.jetpackvideo.R;
@@ -29,8 +31,8 @@ import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -42,6 +44,7 @@ public class InteractionPresenter {
     private static final String URL_TOGGLE_FEED_DIS_LIKE = "/ugc/dissFeed";
     private static final String URL_SHARE = "/ugc/increaseShareCount";
     private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
+    private static final String URL_FEED_FAVORITE = "/ugc/toggleFavorite";
 
     private static Uri shareImgUri;
 
@@ -83,15 +86,10 @@ public class InteractionPresenter {
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        boolean hasLiked = false;
                         if (response.body != null) {
-                            try {
-                                hasLiked = response.body.getBoolean("hasLiked");
-                                // 改变数据dataBinding触发UI变化
-                                feed.getUgc().setHasLiked(hasLiked);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            boolean hasLiked = response.body.getBooleanValue("hasLiked");
+                            // 改变数据dataBinding触发UI变化
+                            feed.getUgc().setHasLiked(hasLiked);
                         }
                     }
 
@@ -134,14 +132,9 @@ public class InteractionPresenter {
                 .execute(new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
-                        boolean hasDiss = false;
                         if (response.body != null) {
-                            try {
-                                hasDiss = response.body.getBoolean("hasdiss");
-                                feed.getUgc().setHasdiss(hasDiss);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            boolean hasDiss = hasDiss = response.body.getBooleanValue("hasdiss");
+                            feed.getUgc().setHasdiss(hasDiss);
                         }
                     }
 
@@ -189,7 +182,7 @@ public class InteractionPresenter {
 
         ShareDialog shareDialog = new ShareDialog(context);
         shareDialog.setShareContent(shareUrl);
-        Og.d("openShare, shareImgUri: "+shareImgUri);
+        Og.d("openShare, shareImgUri: " + shareImgUri);
         shareDialog.setShareImg(shareImgUri);
         shareDialog.setShareItemClickListener(new View.OnClickListener() {
             @Override
@@ -199,13 +192,8 @@ public class InteractionPresenter {
                             @Override
                             public void onSuccess(ApiResponse<JSONObject> response) {
                                 if (response.body != null) {
-                                    int count = 0;
-                                    try {
-                                        count = response.body.getInt("count");
-                                        feed.getUgc().setShareCount(count);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    int count = response.body.getIntValue("count");
+                                    feed.getUgc().setShareCount(count);
                                 }
                             }
 
@@ -251,13 +239,141 @@ public class InteractionPresenter {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {
                         if (response.body != null) {
-                            boolean hasLiked = false;
-                            try {
-                                hasLiked = response.body.getBoolean("hasLiked");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            boolean hasLiked = response.body.getBooleanValue("hasLiked");
                             comment.getUgc().setHasLiked(hasLiked);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    //收藏/取消收藏一个帖子
+    public static void toggleFeedFavorite(LifecycleOwner owner, Feed feed) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFeedFavorite(feed);
+            }
+        })) {
+        } else {
+            toggleFeedFavorite(feed);
+        }
+    }
+
+
+    public static void toggleFeedFavorite(Feed feed) {
+        ApiService.get(URL_FEED_FAVORITE)
+                .addParams("itemId", feed.itemId)
+                .addParams("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
+
+                            feed.getUgc().setHasFavorite(hasFavorite);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+
+    //关注/取消关注一个用户
+    public static void toggleFollowUser(LifecycleOwner owner, Feed feed) {
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleFollowUser(feed);
+            }
+        })) {
+        } else {
+            toggleFollowUser(feed);
+        }
+    }
+
+    private static void toggleFollowUser(Feed feed) {
+        ApiService.get("/ugc/toggleUserFollow")
+                .addParams("followUserId", UserManager.get().getUserId())
+                .addParams("userId", feed.author.userId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFollow = response.body.getBooleanValue("hasLiked");
+                            feed.getAuthor().setHasFollow(hasFollow);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    public static LiveData<Boolean> deleteFeed(Context context, long itemId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedInternal(liveData, itemId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
+        ApiService.get("/feeds/deleteFeed")
+                .addParams("itemId", itemId)
+                .execute(new JsonCallback<com.alibaba.fastjson.JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<com.alibaba.fastjson.JSONObject> response) {
+                        if (response.body != null) {
+                            boolean success = response.body.getBoolean("result");
+                            liveData.postValue(success);
+                            showToast("删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<com.alibaba.fastjson.JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    //删除某个帖子的一个评论
+    public static LiveData<Boolean> deleteFeedComment(Context context, long itemId, long commentId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(context)
+                .setNegativeButton("删除", (dialog, which) -> {
+                    dialog.dismiss();
+                    deleteFeedCommentInternal(liveData, itemId, commentId);
+                }).setPositiveButton("取消", (dialog, which) -> dialog.dismiss()).setMessage("确定要删除这条评论吗？").create().show();
+        return liveData;
+    }
+
+    private static void deleteFeedCommentInternal(LiveData liveData, long itemId, long commentId) {
+        ApiService.get("/comment/deleteComment")
+                .addParams("userId", UserManager.get().getUserId())
+                .addParams("commentId", commentId)
+                .addParams("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean result = response.body.getBooleanValue("result");
+                            ((MutableLiveData) liveData).postValue(result);
+                            showToast("评论删除成功");
                         }
                     }
 

@@ -7,6 +7,11 @@
         <variable
             name="comment"
             type="com.jesen.cod.jetpackvideo.model.Comment" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
         <import type="android.text.TextUtils"/>
         <import type="android.view.View"/>
         <import type="com.jesen.cod.jetpackvideo.ui.login.UserManager"/>
@@ -89,6 +94,7 @@
             android:textColor="@{comment.ugc.hasLiked?@color/color_theme:@color/color_999}"
             android:drawablePadding="@dimen/dp_5"
             android:text="@{String.valueOf(comment.ugc.likeCount)}"
+            android:onClick="@{()->InteractionPresenter.toggleCommentLike(owner,comment)}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:drawableRight="@drawable/icon_like"
