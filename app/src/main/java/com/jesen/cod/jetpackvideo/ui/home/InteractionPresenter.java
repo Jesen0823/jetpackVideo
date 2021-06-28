@@ -26,6 +26,7 @@ import com.jesen.cod.jetpackvideo.utils.BitmapUtil;
 import com.jesen.cod.jetpackvideo.utils.FileUtil;
 import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libcommon.JetAppGlobal;
+import com.jesen.cod.libcommon.extention.LiveDataBus;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
@@ -39,6 +40,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 public class InteractionPresenter {
+
+    public static final String EVENT_DATA_FROM_INTERACTION = "data_from_interaction";
 
     private static final String URL_TOGGLE_FEED_LIKE = "/ugc/toggleFeedLike";
     private static final String URL_TOGGLE_FEED_DIS_LIKE = "/ugc/dissFeed";
@@ -90,6 +93,8 @@ public class InteractionPresenter {
                             boolean hasLiked = response.body.getBooleanValue("hasLiked");
                             // 改变数据dataBinding触发UI变化
                             feed.getUgc().setHasLiked(hasLiked);
+                            LiveDataBus.getInstance().with(EVENT_DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 
@@ -274,8 +279,9 @@ public class InteractionPresenter {
                     public void onSuccess(ApiResponse<JSONObject> response) {
                         if (response.body != null) {
                             boolean hasFavorite = response.body.getBooleanValue("hasFavorite");
-
                             feed.getUgc().setHasFavorite(hasFavorite);
+                            LiveDataBus.getInstance().with(EVENT_DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 
@@ -311,6 +317,9 @@ public class InteractionPresenter {
                             boolean hasFollow = response.body.getBooleanValue("hasLiked");
                             feed.getAuthor().setHasFollow(hasFollow);
 
+                            // 利用事件总线将数据变更发送出去，在FeedAdapter观察事件
+                            LiveDataBus.getInstance().with(EVENT_DATA_FROM_INTERACTION)
+                                    .postValue(feed);
                         }
                     }
 

@@ -43,14 +43,14 @@ public class SofaFragment extends Fragment {
     private TabLayout tabLayout;
     private SofaTab tabConfig;
     private List<SofaTab.Tabs> tabs;
-    private Map<Integer, Fragment> mFragmentMap = new HashMap<>();
+    //private Map<Integer, Fragment> mFragmentMap = new HashMap<>();
     private TabLayoutMediator mediator;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-         binding = FragmentSofaBinding.inflate(inflater, container, false);
+        binding = FragmentSofaBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -60,26 +60,32 @@ public class SofaFragment extends Fragment {
         tabLayout = binding.tabLayout;
 
         // 过滤tabs
-         tabConfig = getTabConfig();
-         tabs = new ArrayList<>();
+        tabConfig = getTabConfig();
+        tabs = new ArrayList<>();
         for (SofaTab.Tabs tab : tabConfig.tabs) {
-            if (tab.enable){
+            if (tab.enable) {
                 tabs.add(tab);
             }
         }
 
         viewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
+
+        //viewPager2默认只有一种类型的Adapter。FragmentStateAdapter
+        //并且在页面切换的时候 不会调用子Fragment的setUserVisibleHint ，取而代之的是onPause(),onResume()、
         viewPager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), this.getLifecycle()) {
             @NonNull
             @NotNull
             @Override
             public Fragment createFragment(int position) {
-                Fragment fragment = mFragmentMap.get(position);
-                if (fragment == null){
+                /*Fragment fragment = mFragmentMap.get(position);
+                if (fragment == null) {
                     fragment = getTabFragment(position);
                     mFragmentMap.put(position, fragment);
                 }
-                return fragment;
+                return fragment;*/
+
+                //这里不需要自己保管了,FragmentStateAdapter内部自己会管理已实例化的fragment对象
+                return getTabFragment(position);
             }
 
             @Override
@@ -90,10 +96,12 @@ public class SofaFragment extends Fragment {
 
         tabLayout.setTabGravity(tabConfig.tabGravity);
 
-         mediator = new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
+        //autoRefresh:如果viewPager2 中child的数量发生了变化，即调用了adapter#notifyItemChanged()前后getItemCount不同。
+        //是否需要重新刷野tabLayout的tab标签视情况而定,sofaFragment的tab数量一旦固定了是不会变的，传true/false 都可以
+        mediator = new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull @NotNull TabLayout.Tab tab, int position) {
-                     tab.setCustomView(makeTabView(position));
+                tab.setCustomView(makeTabView(position));
             }
         });
         // tabLayout 和 viewPage联动
@@ -113,13 +121,13 @@ public class SofaFragment extends Fragment {
         @Override
         public void onPageSelected(int position) {
             int tabCount = tabLayout.getTabCount();
-            for(int i =0; i< tabCount;i++){
+            for (int i = 0; i < tabCount; i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
                 TextView customView = (TextView) tab.getCustomView();
-                if (tab.getPosition() == position){
+                if (tab.getPosition() == position) {
                     customView.setTextSize(tabConfig.activeSize);
                     customView.setTypeface(Typeface.DEFAULT_BOLD);
-                }else {
+                } else {
                     customView.setTextSize(tabConfig.normalSize);
                     customView.setTypeface(Typeface.DEFAULT);
                 }
@@ -129,11 +137,11 @@ public class SofaFragment extends Fragment {
 
     private View makeTabView(int position) {
         TextView tabView = new TextView(getContext());
-        int [][] states = new int[2][];
+        int[][] states = new int[2][];
         states[0] = new int[]{android.R.attr.state_selected};
         states[1] = new int[]{};
 
-        int [] colors = new int[]{Color.parseColor(tabConfig.activeColor), Color.parseColor(tabConfig.normalColor)};
+        int[] colors = new int[]{Color.parseColor(tabConfig.activeColor), Color.parseColor(tabConfig.normalColor)};
         ColorStateList stateList = new ColorStateList(states, colors);
         tabView.setTextColor(stateList);
         tabView.setText(tabs.get(position).title);
@@ -154,7 +162,7 @@ public class SofaFragment extends Fragment {
         super.onHiddenChanged(hidden);
         List<Fragment> fragments = getChildFragmentManager().getFragments();
         for (Fragment fragment : fragments) {
-            if (fragment.isAdded() && fragment.isVisible()){
+            if (fragment.isAdded() && fragment.isVisible()) {
                 fragment.onHiddenChanged(hidden);
                 break;
             }

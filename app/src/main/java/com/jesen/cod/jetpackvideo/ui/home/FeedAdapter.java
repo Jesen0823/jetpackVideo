@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
@@ -24,6 +25,7 @@ import com.jesen.cod.jetpackvideo.ui.detail.FeedDetailActivity;
 import com.jesen.cod.jetpackvideo.ui.view.ListPlayerView;
 import com.jesen.cod.jetpackvideo.utils.Og;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
+import com.jesen.cod.libcommon.extention.LiveDataBus;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +41,7 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
     private  String mCategory;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
+    private FeedObserver mFeedObserver;
 
     // DiffCallback 用来处理差分
     protected FeedAdapter(Context context, String category) {
@@ -107,15 +110,42 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
 
     @Override
     protected void onBindViewHolder2(ViewHolder holder, int position) {
-        holder.bindData(getItem(position));
+        final Feed feed = getItem(position);
+        holder.bindData(feed);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Og.i("item click, go detail page.");
-                FeedDetailActivity.startFeedDetailActivity(mContext, getItem(position),mCategory);
+                FeedDetailActivity.startFeedDetailActivity(mContext, feed,mCategory);
+                if (mFeedObserver == null){
+                    mFeedObserver = new FeedObserver();
+                    LiveDataBus.getInstance().with(InteractionPresenter.EVENT_DATA_FROM_INTERACTION)
+                            .observe((LifecycleOwner) mContext, mFeedObserver);
+                }
+                mFeedObserver.setFeed(feed);
             }
         });
+    }
+
+    private class FeedObserver implements Observer<Feed>{
+
+        private Feed mFeed;
+
+        @Override
+        public void onChanged(Feed newFeed) {
+            if(mFeed.id != newFeed.id){
+                return;
+            }
+            mFeed.author = newFeed.author;
+            mFeed.ugc = newFeed.ugc;
+            mFeed.notifyChange();
+        }
+
+        public void setFeed(Feed feed) {
+
+            mFeed = feed;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
