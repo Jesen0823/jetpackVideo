@@ -26,7 +26,7 @@ public class FeedDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Feed feed = getIntent().getParcelableExtra(KEY_FEED);
+        Feed feed = (Feed)getIntent().getSerializableExtra(KEY_FEED);
         if (feed == null){
             finish();
             return;

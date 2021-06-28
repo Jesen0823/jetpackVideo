@@ -25,7 +25,7 @@ public class FeedDetailViewModel extends AbsViewModel<Comment> {
 
     @Override
     public DataSource createDataSource() {
-        return null;
+        return new DataSource();
     }
 
     class DataSource extends ItemKeyedDataSource<Integer, Comment>{

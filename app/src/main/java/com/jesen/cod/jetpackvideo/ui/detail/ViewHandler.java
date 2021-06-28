@@ -1,12 +1,15 @@
 package com.jesen.cod.jetpackvideo.ui.detail;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +18,10 @@ import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedDetailBottomInteractionBinding;
 import com.jesen.cod.jetpackvideo.model.Comment;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
 import com.jesen.cod.libcommon.view.EmptyView;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ViewHandler {
 
@@ -27,6 +33,7 @@ public abstract class ViewHandler {
     protected RecyclerView mRecyclerView;
     protected FeedCommentAdapter mListAdapter;
     protected LayoutFeedDetailBottomInteractionBinding mInteractionBinding;
+    private CommentDialog commentDialog;
 
     public ViewHandler(FragmentActivity activity) {
 
@@ -42,7 +49,7 @@ public abstract class ViewHandler {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,
                 LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(null);
-        mListAdapter = new FeedCommentAdapter();
+        mListAdapter = new FeedCommentAdapter(mActivity);
         mRecyclerView.setAdapter(mListAdapter);
 
         detailViewModel.setItemId(mFeed.itemId);
@@ -52,19 +59,49 @@ public abstract class ViewHandler {
             public void onChanged(PagedList<Comment> comments) {
                 mListAdapter.submitList(comments);
 
-                handleEmpty(comments.size()>0);
+                handleEmpty(comments.size() > 0);
+            }
+        });
+
+        mInteractionBinding.inputView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (commentDialog == null) {
+                    commentDialog = CommentDialog.getInstance(mFeed.itemId);
+                }
+                commentDialog.setCommentAddResultListener(new CommentDialog.CommentAddResultListener() {
+                    @Override
+                    public void onAddComment(Comment comment) {
+                        MutableItemKeyedDataSource<Integer, Comment> dataSource
+                                = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) detailViewModel.getDataSource()) {
+
+                            @NonNull
+                            @Override
+                            public @NotNull Integer getKey(@NonNull @NotNull Comment item) {
+                                return item.id;
+                            }
+                        };
+
+                        dataSource.data.add(comment);
+                        dataSource.data.addAll(mListAdapter.getCurrentList());
+                        // 使得新添加/发布的评论处于列表的第一项
+                        PagedList<Comment> pagedList = dataSource.buildNewItemList(mListAdapter.getCurrentList().getConfig());
+                        mListAdapter.submitList(pagedList);
+                    }
+                });
+                commentDialog.show(mActivity.getSupportFragmentManager(), "cmt_dialog");
             }
         });
 
     }
 
-    private  void handleEmpty(boolean hasData){
-        if (hasData){
-            if (mEmptyView != null){
+    private void handleEmpty(boolean hasData) {
+        if (hasData) {
+            if (mEmptyView != null) {
                 mListAdapter.removeHeaderView(mEmptyView);
             }
-        }else {
-            if (mEmptyView == null){
+        } else {
+            if (mEmptyView == null) {
                 mEmptyView = new EmptyView(mActivity);
                 mEmptyView.setLayoutParams(new RecyclerView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

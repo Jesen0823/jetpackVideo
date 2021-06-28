@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayDetector;
+import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.MutablePageKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.view.AbsListFragment;
@@ -34,6 +35,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     private PageListPlayDetector playDetector;
     private static String mFeedType;
+    private boolean shouldPause = true;
 
 
     public static HomeFragment newInstance(String feedType) {
@@ -51,7 +53,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         mViewModel.getCacheLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Feed>>() {
             @Override
             public void onChanged(PagedList<Feed> feeds) {
-                mAdapter.submitList(feeds);
+                submitList(feeds);
             }
         });
          playDetector = new PageListPlayDetector(this, mRecyclerView);
@@ -75,6 +77,12 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
             }
 
             @Override
+            public void onStartFeedDetailActivity(Feed feed) {
+                boolean isVideo = feed.itemType == Feed.TYPE_VIDEO;
+                shouldPause = !isVideo;
+            }
+
+            @Override
             public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
                 //这个方法是在我们每提交一次 pagelist对象到adapter 就会触发一次
                 //每调用一次 adpater.submitlist
@@ -89,13 +97,25 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     @Override
     public void onLoadMore( @NotNull RefreshLayout refreshLayout) {
-        Feed feed = mAdapter.getCurrentList().get(mAdapter.getItemCount() - 1);
+        final PagedList<Feed> currentList = mAdapter.getCurrentList();
+        if (currentList == null || currentList.size() <= 0) {
+            finishRefresh(false);
+            return;
+        }
+
+        Feed feed = currentList.get(mAdapter.getItemCount() - 1);
         mViewModel.loadAfter(feed.id, new ItemKeyedDataSource.LoadCallback<Feed>() {
             @Override
             public void onResult(@NonNull @NotNull List<Feed> data) {
-                PagedList.Config config = mAdapter.getCurrentList().getConfig();
+                PagedList.Config config = currentList.getConfig();
                 if (data !=null && data.size() > 0){
+                    //这里 咱们手动接管 分页数据加载的时候 使用MutableItemKeyedDataSource也是可以的。
+                    //由于当且仅当 paging不再帮我们分页的时候，我们才会接管。所以 就不需要ViewModel中创建的DataSource继续工作了，所以使用
+                    //MutablePageKeyedDataSource也是可以的
                     MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource();
+                    //这里要把列表上已经显示的先添加到dataSource.data中
+                    //而后把本次分页回来的数据再添加到dataSource.data中
+                    dataSource.data.addAll(currentList);
                     dataSource.data.addAll(data);
                     PagedList pagedList = dataSource.buildNewPageList(config);
                     submitList(pagedList);
@@ -124,7 +144,11 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     @Override
     public void onPause() {
         Og.d("HomeFragment, onPause, feedType:"+ mFeedType);
-        playDetector.onPause();
+        //如果是跳转到详情页,咱们就不需要 暂停视频播放了
+        //如果是前后台切换 或者去别的页面了 都是需要暂停视频播放的
+        if (shouldPause) {
+            playDetector.onPause();
+        }
         super.onPause();
     }
 
@@ -132,6 +156,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     public void onResume() {
         Og.d("HomeFragment, onResume, feedType:"+ mFeedType);
         super.onResume();
+        shouldPause = true;
         if (getParentFragment() != null){
             if (getParentFragment().isVisible() && isVisible()){
                 playDetector.onResume();
@@ -147,6 +172,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     @Override
     public void onDestroyView() {
         Og.d("HomeFragment, onDestroyView, feedType:"+ mFeedType);
+        PageListPlayManager.removePageListPlay(mFeedType);
         super.onDestroyView();
     }
 }

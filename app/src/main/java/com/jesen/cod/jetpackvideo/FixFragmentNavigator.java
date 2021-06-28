@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -28,13 +29,12 @@ import java.util.Map;
 
 @Navigator.Name("fixFragNavigator")
 public class FixFragmentNavigator extends FragmentNavigator {
-
     private static final String TAG = "FixFragmentNavigator";
     private Context mContext;
     private FragmentManager mManager;
     private int mContainerId;
 
-    public FixFragmentNavigator(@NonNull @NotNull Context context, @NonNull @NotNull FragmentManager manager, int containerId) {
+    public FixFragmentNavigator(@NonNull Context context, @NonNull FragmentManager manager, int containerId) {
         super(context, manager, containerId);
         mContext = context;
         mManager = manager;
@@ -42,9 +42,8 @@ public class FixFragmentNavigator extends FragmentNavigator {
     }
 
     @Nullable
-    @org.jetbrains.annotations.Nullable
     @Override
-    public NavDestination navigate(@NonNull @NotNull FragmentNavigator.Destination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle args, @Nullable @org.jetbrains.annotations.Nullable NavOptions navOptions, @Nullable @org.jetbrains.annotations.Nullable Navigator.Extras navigatorExtras) {
+    public NavDestination navigate(@NonNull Destination destination, @Nullable Bundle args, @Nullable NavOptions navOptions, @Nullable Navigator.Extras navigatorExtras) {
         if (mManager.isStateSaved()) {
             Log.i(TAG, "Ignoring navigate() call: FragmentManager has already"
                     + " saved its state");
@@ -54,9 +53,14 @@ public class FixFragmentNavigator extends FragmentNavigator {
         if (className.charAt(0) == '.') {
             className = mContext.getPackageName() + className;
         }
-        /*final Fragment frag = instantiateFragment(mContext, mManager,
-                className, args);
-        frag.setArguments(args);*/
+        //android.fragment.app.homefragment   homefragment
+        String tag = className.substring(className.lastIndexOf(".") + 1);
+        Fragment frag = mManager.findFragmentByTag(tag);
+        if (frag == null) {
+            frag = instantiateFragment(mContext, mManager,
+                    className, args);
+        }
+        frag.setArguments(args);
         final FragmentTransaction ft = mManager.beginTransaction();
 
         int enterAnim = navOptions != null ? navOptions.getEnterAnim() : -1;
@@ -71,22 +75,14 @@ public class FixFragmentNavigator extends FragmentNavigator {
             ft.setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim);
         }
 
-        Fragment currentFragment =  mManager.getPrimaryNavigationFragment();
-        if (currentFragment != null){
-            ft.hide(currentFragment);
+        List<Fragment> fragments = mManager.getFragments();
+        for (Fragment fragment : fragments) {
+            ft.hide(fragment);
         }
-        Fragment frag = null;
-        String tag = String.valueOf(destination.getId());
-        frag = mManager.findFragmentByTag(tag);
-        if (frag != null){
-            ft.show(frag);
-        }else {
-            frag = mManager.getFragmentFactory().instantiate(
-                    mContext.getClassLoader(), className);
-            //frag = instantiateFragment(mContext, mManager, className, args);
-            frag.setArguments(args);
-            ft.add(mContainerId, frag);
+        if (!frag.isAdded()) {
+            ft.add(mContainerId, frag, tag);
         }
+        ft.show(frag);
         //ft.replace(mContainerId, frag);
         ft.setPrimaryNavigationFragment(frag);
 
@@ -96,7 +92,9 @@ public class FixFragmentNavigator extends FragmentNavigator {
             Field field = FragmentNavigator.class.getDeclaredField("mBackStack");
             field.setAccessible(true);
             mBackStack = (ArrayDeque<Integer>) field.get(this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
@@ -143,7 +141,7 @@ public class FixFragmentNavigator extends FragmentNavigator {
         }
     }
 
-    private String generateBackStackName(int backStackIndex,int destId){
-        return backStackIndex + "-" + destId;
+    private String generateBackStackName(int backStackindex, int destid) {
+        return backStackindex + "-" + destid;
     }
 }

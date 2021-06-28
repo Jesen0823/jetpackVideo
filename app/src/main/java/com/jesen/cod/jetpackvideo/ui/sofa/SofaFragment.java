@@ -98,7 +98,7 @@ public class SofaFragment extends Fragment {
 
         //autoRefresh:如果viewPager2 中child的数量发生了变化，即调用了adapter#notifyItemChanged()前后getItemCount不同。
         //是否需要重新刷野tabLayout的tab标签视情况而定,sofaFragment的tab数量一旦固定了是不会变的，传true/false 都可以
-        mediator = new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
+        mediator = new TabLayoutMediator(tabLayout, viewPager, true, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull @NotNull TabLayout.Tab tab, int position) {
                 tab.setCustomView(makeTabView(position));

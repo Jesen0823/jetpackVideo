@@ -1,8 +1,10 @@
 package com.jesen.cod.jetpackvideo;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jesen.cod.jetpackvideo.model.Destination;
@@ -43,11 +45,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //由于 启动时设置了 R.style.launcher 的windowBackground属性
+        //势必要在进入主页后,把窗口背景清理掉
         setTheme(R.style.AppTheme);
         /*
-        * 使得页面从状态栏处开始布局，但防止页面文字和状态栏文字重叠，需要在布局文件添加：
-        * android:fitsSystemWindows="true"
-        * */
+         * 使得页面从状态栏处开始布局，但防止页面文字和状态栏文字重叠，需要在布局文件添加：
+         * android:fitsSystemWindows="true"
+         * */
         StatusBarUtil.fitSystemBar(this);
         super.onCreate(savedInstanceState);
 
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         navController = NavHostFragment.findNavController(fragment);
 
         //NavGraphBuilder.build(navController);
-        NavGraphBuilder.build(navController, this, fragment.getId());
+        NavGraphBuilder.build(navController, fragment.getChildFragmentManager(), this, fragment.getId());
         navView.setOnNavigationItemSelectedListener(this);
     }
 
@@ -78,7 +82,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     @Override
                     public void onChanged(User user) {
                         // 登录完成后跳回
-                        navView.setSelectedItemId(item.getItemId());
+                        if (user != null) {
+                            navView.setSelectedItemId(item.getItemId());
+                        }
                     }
                 });
                 return false;
@@ -100,5 +106,52 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onRestart();
         Og.d("MainActivity, onRestart");
 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //当前正在显示的页面destinationId
+        int currentPageId = navController.getCurrentDestination().getId();
+
+        //APP页面路导航结构图  首页的destinationId
+        int homeDestId = navController.getGraph().getStartDestination();
+
+        //如果当前正在显示的页面不是首页，而我们点击了返回键，则拦截。
+        if (currentPageId != homeDestId) {
+            navView.setSelectedItemId(homeDestId);
+            return;
+        }
+
+        //否则 finish，此处不宜调用onBackPressed。因为navigation会操作回退栈,切换到之前显示的页面。
+        finish();
+    }
+
+    /**
+     * bugfix:
+     * 当MainActivity因为内存不足或系统原因 被回收时 会执行该方法。
+     * <p>
+     * 此时会触发 FragmentManangerImpl#saveAllState的方法把所有已添加的fragment基本信息给存储起来(view没有存储)，以便于在恢复重建时能够自动创建fragment
+     * <p>
+     * 但是在fragment嵌套fragment的情况下，被内嵌的fragment在被恢复时，生命周期被重新调度，出现了错误。没有重新走onCreateView 方法
+     * 从而会触发throw new IllegalStateException("Fragment " + fname did not create a view.");的异常
+     * <p>
+     * 但是在没有内嵌fragment的情况，没有问题、
+     * <p>
+     * <p>
+     * 那我们为了解决这个问题，网络上也有许多方案，但都不尽善尽美。
+     * <p>
+     * 此时我们复写onSaveInstanceState，不让 FragmentManangerImpl 保存fragment的基本数据，恢复重建时，再重新创建即可
+     *
+     * @param outState
+     */
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 }

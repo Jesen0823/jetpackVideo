@@ -90,7 +90,7 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
                 @Override
                 public void onChanged(PagedList<T> pagedList) {
                     //  Set the new list to be displayed.
-                    mAdapter.submitList(pagedList);
+                    submitList(pagedList);
                 }
             });
             // 监听分页时有无更多数据,以决定是否关闭上拉加载的动画
@@ -129,7 +129,7 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
         hasData = hasData || currentList != null && currentList.size() > 0;
         RefreshState state = mRefreshLayout.getState();
         if (state.isFooter && state.isOpening) {
-            mRefreshLayout.finishRefresh();
+            mRefreshLayout.finishLoadMore();
         } else if (state.isHeader && state.isOpening) {
             mRefreshLayout.finishRefresh();
         }

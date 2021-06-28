@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -45,12 +47,12 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     private int mCacheStrategy;
 
     @IntDef({CACHE_ONLY, CACHE_FIRST, NET_CACHE, NET_ONLY})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface CacheStrategy {
 
     }
 
     public Request(String url) {
-
         mUrl = url;
     }
 
@@ -168,6 +170,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
         } catch (Exception e) {
             message = e.getMessage();
             success = false;
+            status = 0;
         }
 
         result.success = success;
@@ -197,14 +200,17 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     }
 
     public ApiResponse<T> execute() {
+        if (mType == null) {
+            throw new RuntimeException("同步方法,response 返回值 类型必须设置");
+        }
         if (mCacheStrategy == CACHE_ONLY) {
             return readCache();
-        } else {
+        }
+        if(mCacheStrategy != CACHE_ONLY) {
             ApiResponse<T> result = null;
             try {
                 Response response = getCall().execute();
                 result = parseResponse(response, null);
-                return result;
             } catch (IOException e) {
                 e.printStackTrace();
                 if (result == null) {
@@ -214,6 +220,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
             }
             return result;
         }
+        return null;
     }
 
     public R responseType(Type type) {

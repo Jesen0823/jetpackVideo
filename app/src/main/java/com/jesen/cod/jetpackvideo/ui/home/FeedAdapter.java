@@ -116,8 +116,9 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Og.i("item click, go detail page.");
+                Og.i("item click, go detail page, feed:"+feed.id+",mCategory:"+mCategory+",mContext:"+mContext.toString());
                 FeedDetailActivity.startFeedDetailActivity(mContext, feed,mCategory);
+                onStartFeedDetailActivity(feed);
                 if (mFeedObserver == null){
                     mFeedObserver = new FeedObserver();
                     LiveDataBus.getInstance().with(InteractionPresenter.EVENT_DATA_FROM_INTERACTION)
@@ -146,6 +147,10 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
 
             mFeed = feed;
         }
+    }
+
+    public void onStartFeedDetailActivity(Feed feed) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

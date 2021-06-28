@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -183,10 +184,16 @@ public class InteractionPresenter {
      * */
     public static void openShare(Context context, Feed feed) {
         String url = "http://h5.aliyun.ppjoke.com/item/%s?timestamp=%s&user_id=%s";
-        String shareUrl = String.format(url, feed.itemId, new Date().getTime(), UserManager.get().getUserId());
+        //String shareUrl = String.format(url, feed.itemId, new Date().getTime(), UserManager.get().getUserId());
+        String shareContent = feed.feeds_text;
+        if (!TextUtils.isEmpty(feed.url)) {
+            shareContent = feed.url;
+        } else if (!TextUtils.isEmpty(feed.cover)) {
+            shareContent = feed.cover;
+        }
 
         ShareDialog shareDialog = new ShareDialog(context);
-        shareDialog.setShareContent(shareUrl);
+        shareDialog.setShareContent(shareContent);
         Og.d("openShare, shareImgUri: " + shareImgUri);
         shareDialog.setShareImg(shareImgUri);
         shareDialog.setShareItemClickListener(new View.OnClickListener() {

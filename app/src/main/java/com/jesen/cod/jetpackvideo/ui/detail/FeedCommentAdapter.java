@@ -1,16 +1,23 @@
 package com.jesen.cod.jetpackvideo.ui.detail;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.paging.ItemKeyedDataSource;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedCommentListItemBinding;
 import com.jesen.cod.jetpackvideo.model.Comment;
+import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
+import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 import com.jesen.cod.libcommon.utils.PixUtils;
@@ -19,7 +26,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedCommentAdapter.ViewHolder> {
 
-    protected FeedCommentAdapter() {
+    private Context mContext;
+    private LayoutInflater mInflater;
+
+    protected FeedCommentAdapter(Context context) {
         super(new DiffUtil.ItemCallback<Comment>() {
             @Override
             public boolean areItemsTheSame(@NonNull @NotNull Comment oldItem, @NonNull @NotNull Comment newItem) {
@@ -31,12 +41,14 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
                 return oldItem.equals(newItem);
             }
         });
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
     protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
         LayoutFeedCommentListItemBinding binding = LayoutFeedCommentListItemBinding
-                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                .inflate(mInflater, parent, false);
         return new ViewHolder(binding.getRoot(), binding);
     }
 
@@ -44,6 +56,38 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
     protected void onBindViewHolder2(ViewHolder holder, int position) {
         Comment comment = getItem(position);
         holder.bindData(comment);
+
+        holder.mBinding.commentDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InteractionPresenter.deleteFeedComment(mContext, comment.itemId, comment.commentId)
+                        .observe((LifecycleOwner) mContext, new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean success) {
+                                if (success) {
+                                    MutableItemKeyedDataSource<Integer, Comment> dataSource
+                                            = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) getCurrentList().getDataSource()) {
+                                        @NonNull
+                                        @Override
+                                        public @NotNull Integer getKey(@NonNull @NotNull Comment item) {
+                                            return item.id;
+                                        }
+                                    };
+
+                                    PagedList<Comment> currentList = getCurrentList();
+                                    for (Comment cmt : currentList) {
+                                        if (cmt != getItem(position)){
+                                            dataSource.data.add(cmt);
+                                        }
+                                    }
+
+                                    PagedList<Comment> pagedList = dataSource.buildNewItemList(getCurrentList().getConfig());
+                                    submitList(pagedList);
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
