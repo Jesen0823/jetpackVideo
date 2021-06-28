@@ -95,6 +95,9 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
         return getItemViewType2(position);
     }
 
+    /*
+    * 由子类实现
+    * */
     protected int getItemViewType2(int position) {
         return 0;
     }
@@ -126,6 +129,9 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
         return onCreateViewHolder2(parent, viewType);
     }
 
+    /*
+     * 由子类实现
+     * */
     protected abstract VH onCreateViewHolder2(ViewGroup parent, int viewType);
 
     @Override
@@ -137,6 +143,9 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
         onBindViewHolder2(holder, position);
     }
 
+    /*
+     * 由子类实现
+     * */
     protected abstract void onBindViewHolder2(VH holder, int position);
 
     @Override

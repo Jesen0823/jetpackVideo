@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/page_title_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50">
 
@@ -27,6 +28,7 @@
                 android:paddingRight="@dimen/dp_16" />
 
             <TextView
+                android:id="@+id/page_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

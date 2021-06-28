@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="comment"
+            type="com.jesen.cod.jetpackvideo.model.Comment" />
+        <import type="android.text.TextUtils"/>
+        <import type="android.view.View"/>
+        <import type="com.jesen.cod.jetpackvideo.ui.login.UserManager"/>
+        <import type="com.jesen.cod.jetpackvideo.utils.TimeUtils"/>
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_10">
+
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            android:id="@+id/author_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_16"
+            image_url="@{comment.author.avatar}"
+            isCircle="@{true}"
+            tools:src="@drawable/wode_pressed"/>
+
+        <TextView
+            android:id="@+id/author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/author_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_000"
+            android:text="@{comment.author.name}"
+            tools:text="采蘑菇的江洋大盗"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/label_author"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_14"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_0"
+            android:paddingBottom="@dimen/dp_0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintLeft_toRightOf="@id/author_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:backgroundTint="@color/color_theme"
+            app:cornerRadius="@dimen/dp_4"
+            android:text="@string/author"
+            app:layout_constraintBaseline_toBaselineOf="@id/author_name" />
+
+        <TextView
+            android:id="@+id/cmt_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/label_author"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_999"
+            android:text="@{TimeUtils.calculate(comment.createTime)}"
+            tools:text="刚刚"/>
+
+        <TextView
+            android:id="@+id/comment_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textSize="@dimen/sp_10"
+            android:gravity="center"
+            android:drawableRight="@{comment.ugc.hasLiked?@drawable/icon_like_selected:@drawable/icon_like}"
+            android:textColor="@{comment.ugc.hasLiked?@color/color_theme:@color/color_999}"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="@{String.valueOf(comment.ugc.likeCount)}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:drawableRight="@drawable/icon_like"
+            tools:text="102"/>
+
+        <ImageView
+            android:id="@+id/comment_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/delete_icon"
+            app:layout_constraintRight_toLeftOf="@id/comment_like"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            />
+
+        <TextView
+            android:id="@+id/comment_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/color_333"
+            app:layout_constraintLeft_toRightOf="@id/author_avatar"
+            app:layout_constraintTop_toBottomOf="@id/author_name"
+            android:paddingRight="@dimen/dp_60"
+            android:text="@{comment.commentText}"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            tools:text="噼里啪啦评论噼里啪啦" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/author_avatar"
+            app:layout_constraintTop_toBottomOf="@id/comment_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10">
+
+            <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+                android:id="@+id/comment_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/color_theme_10"
+                android:scaleType="center" />
+
+            <ImageView
+                android:id="@+id/video_icon"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:src="@drawable/ic_camera_white" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
