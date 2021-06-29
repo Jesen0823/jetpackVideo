@@ -24,7 +24,7 @@ import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.exoplayer.IPlayTarget;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlay;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
 
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {

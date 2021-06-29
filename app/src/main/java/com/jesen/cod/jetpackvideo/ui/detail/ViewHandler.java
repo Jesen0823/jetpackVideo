@@ -1,5 +1,6 @@
 package com.jesen.cod.jetpackvideo.ui.detail;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -116,6 +117,12 @@ public abstract class ViewHandler {
                 mEmptyView.setTitle(mActivity.getString(R.string.feed_comment_empty));
             }
             mListAdapter.addHeaderView(mEmptyView);
+        }
+    }
+
+    public  void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (commentDialog != null && commentDialog.isAdded()){
+            commentDialog.onActivityResult(requestCode, resultCode,data);
         }
     }
 }

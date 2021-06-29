@@ -3,8 +3,6 @@ package com.jesen.cod.jetpackvideo.ui.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,9 +21,9 @@ import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.ShareDialog;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
-import com.jesen.cod.jetpackvideo.utils.BitmapUtil;
-import com.jesen.cod.jetpackvideo.utils.FileUtil;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.BitmapUtil;
+import com.jesen.cod.libcommon.utils.FileUtil;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.JetAppGlobal;
 import com.jesen.cod.libcommon.extention.LiveDataBus;
 import com.jesen.cod.libnetwork.ApiResponse;
@@ -38,7 +36,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Date;
 
 public class InteractionPresenter {
 

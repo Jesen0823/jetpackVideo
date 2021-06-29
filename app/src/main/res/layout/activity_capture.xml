@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.publish.CaptureActivity">
+
+        <TextureView
+            android:id="@+id/texture_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="200dp"
+            android:text="@string/capture_tips" />
+
+        <com.jesen.cod.jetpackvideo.ui.view.RecordView
+            android:id="@+id/record_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="60dp"
+            app:duration="120"
+            app:fill_color="@color/white"
+            app:progress_color="@color/purple_200"
+            app:progress_width="4dp"
+            app:radius="@dimen/dp_40" />
+    </FrameLayout>
+</layout>

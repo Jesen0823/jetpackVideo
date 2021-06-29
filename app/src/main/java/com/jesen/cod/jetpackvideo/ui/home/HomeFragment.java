@@ -1,28 +1,21 @@
 package com.jesen.cod.jetpackvideo.ui.home;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayDetector;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.MutablePageKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.view.AbsListFragment;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnavannotation.FragmentDestination;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 

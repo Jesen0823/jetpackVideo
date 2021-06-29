@@ -11,8 +11,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +21,7 @@ import com.jesen.cod.jetpackvideo.databinding.LayoutFeedTypeVideoBinding;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.detail.FeedDetailActivity;
 import com.jesen.cod.jetpackvideo.ui.view.ListPlayerView;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 import com.jesen.cod.libcommon.extention.LiveDataBus;
 

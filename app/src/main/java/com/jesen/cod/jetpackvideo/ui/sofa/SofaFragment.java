@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -19,20 +18,17 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.FragmentSofaBinding;
 import com.jesen.cod.jetpackvideo.model.SofaTab;
 import com.jesen.cod.jetpackvideo.ui.home.HomeFragment;
 import com.jesen.cod.jetpackvideo.utils.AppConfig;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnavannotation.FragmentDestination;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @FragmentDestination(pageUrl = "main/tabs/sofa", asStarter = false)

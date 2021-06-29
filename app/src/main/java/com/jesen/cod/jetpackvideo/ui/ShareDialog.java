@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,14 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.ui.view.ViImageView;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
 import com.jesen.cod.libcommon.view.CornerFrameLayout;
 import com.jesen.cod.libcommon.view.ViewHelper;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

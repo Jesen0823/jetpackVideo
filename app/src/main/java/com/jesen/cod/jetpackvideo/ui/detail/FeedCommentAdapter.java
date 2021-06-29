@@ -1,5 +1,6 @@
 package com.jesen.cod.jetpackvideo.ui.detail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.jesen.cod.jetpackvideo.model.Comment;
 import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
+import com.jesen.cod.jetpackvideo.ui.publish.PreviewActivity;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 import com.jesen.cod.libcommon.utils.PixUtils;
 
@@ -76,7 +78,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
 
                                     PagedList<Comment> currentList = getCurrentList();
                                     for (Comment cmt : currentList) {
-                                        if (cmt != getItem(position)){
+                                        if (cmt != getItem(position)) {
                                             dataSource.data.add(cmt);
                                         }
                                     }
@@ -86,6 +88,15 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
                                 }
                             }
                         });
+            }
+        });
+        holder.mBinding.commentCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isVideo = comment.commentType == Comment.COMMENT_TYPE_VIDEO;
+                PreviewActivity.startActivityForResult((Activity) mContext,
+                        isVideo ? comment.videoUrl : comment.imageUrl,
+                        isVideo, null);
             }
         });
     }

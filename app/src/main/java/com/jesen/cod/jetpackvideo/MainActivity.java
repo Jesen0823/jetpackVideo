@@ -13,8 +13,8 @@ import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.ui.view.AppBottomBar;
 import com.jesen.cod.jetpackvideo.utils.AppConfig;
 import com.jesen.cod.jetpackvideo.utils.NavGraphBuilder;
-import com.jesen.cod.jetpackvideo.utils.Og;
-import com.jesen.cod.jetpackvideo.utils.StatusBarUtil;
+import com.jesen.cod.libcommon.utils.Og;
+import com.jesen.cod.libcommon.utils.StatusBarUtil;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

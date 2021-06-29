@@ -3,5 +3,8 @@
     <files-path
         name="files"
         path="." />
+    <files-path
+        name="cameraX"
+        path="/cameraX/" />
 
 </paths>

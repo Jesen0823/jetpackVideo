@@ -3,6 +3,10 @@
     package="com.jesen.cod.jetpackvideo">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".JetVideoApp"
@@ -14,9 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/launcher"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.detail.FeedDetailActivity"
-            android:theme="@style/feedDetail"></activity>
-        <!-- 这是是QQ快捷登录SDK 里面包含但没用的 apache的类，需要在这里通过uses-library去除掉 -->
+        <activity android:name=".ui.publish.PreviewActivity" android:theme="@style/capture"></activity>
+        <activity android:name=".ui.publish.CaptureActivity" />
+        <activity
+            android:name=".ui.detail.FeedDetailActivity"
+            android:theme="@style/feedDetail" /> <!-- 这是是QQ快捷登录SDK 里面包含但没用的 apache的类，需要在这里通过uses-library去除掉 -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

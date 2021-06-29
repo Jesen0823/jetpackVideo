@@ -1,5 +1,6 @@
 package com.jesen.cod.jetpackvideo.ui.detail;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.os.Parcelable;
 
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.publish.CaptureActivity;
 
 public class FeedDetailActivity extends AppCompatActivity {
 
@@ -41,5 +43,13 @@ public class FeedDetailActivity extends AppCompatActivity {
         }
 
         viewHandler.bindInitData(feed);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (viewHandler != null){
+            viewHandler.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

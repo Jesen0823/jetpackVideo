@@ -1,4 +1,4 @@
-package com.jesen.cod.jetpackvideo.utils;
+package com.jesen.cod.libcommon.utils;
 
 import android.util.Log;
 

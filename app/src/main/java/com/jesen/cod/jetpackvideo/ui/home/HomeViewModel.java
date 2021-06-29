@@ -5,9 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
@@ -17,13 +15,11 @@ import com.jesen.cod.jetpackvideo.AbsViewModel;
 import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.MutablePageKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
-import com.jesen.cod.jetpackvideo.utils.Og;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
 import com.jesen.cod.libnetwork.Request;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
