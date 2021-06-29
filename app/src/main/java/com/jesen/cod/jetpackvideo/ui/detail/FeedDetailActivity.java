@@ -6,11 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 
-import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.Feed;
-import com.jesen.cod.jetpackvideo.ui.publish.CaptureActivity;
 
 public class FeedDetailActivity extends AppCompatActivity {
 
@@ -39,7 +36,7 @@ public class FeedDetailActivity extends AppCompatActivity {
         if (feed.itemType ==Feed.TYPE_IMAGE_TEXT){
             viewHandler = new ImageViewHandler(this);
         }else {
-            viewHandler = new VideoHandler(this);
+            viewHandler = new VideoViewHandler(this);
         }
 
         viewHandler.bindInitData(feed);

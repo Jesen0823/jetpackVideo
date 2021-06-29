@@ -35,6 +35,10 @@
         android:text="@string/login_text"
         android:textColor="@color/color_white"
         android:textSize="@dimen/sp_16"
+        app:icon="@drawable/qq_logo"
+        app:iconSize="@dimen/dp_16"
+        app:iconGravity="textStart"
+        app:iconTintMode="multiply"
         app:backgroundTint="@color/purple_200"
-        app:cornerRadius="25dp"></com.google.android.material.button.MaterialButton>
+        app:cornerRadius="25dp" />
 </FrameLayout>

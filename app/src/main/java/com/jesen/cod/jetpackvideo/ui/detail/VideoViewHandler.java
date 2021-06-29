@@ -2,9 +2,9 @@ package com.jesen.cod.jetpackvideo.ui.detail;
 
 import androidx.fragment.app.FragmentActivity;
 
-public class VideoHandler extends ViewHandler{
+public class VideoViewHandler extends ViewHandler{
 
-    public VideoHandler(FragmentActivity activity) {
+    public VideoViewHandler(FragmentActivity activity) {
         super(activity);
     }
 }

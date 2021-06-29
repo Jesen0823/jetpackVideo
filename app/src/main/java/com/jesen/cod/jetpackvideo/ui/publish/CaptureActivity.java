@@ -79,10 +79,10 @@ public class CaptureActivity extends AppCompatActivity {
 
         // 后置摄像头
         mLensFacing = CameraX.LensFacing.BACK;
-        resolution = new Size(1280,720);
-        rational = new Rational(9,16);
+        resolution = new Size(1280, 720);
+        rational = new Rational(9, 16);
 
-        ActivityCompat.requestPermissions(this, PERMISSIONS,PERMISSION_CODE);
+        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_CODE);
 
         PARENT_FILE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
@@ -90,7 +90,7 @@ public class CaptureActivity extends AppCompatActivity {
             @Override
             public void onClick() {
                 takingPicture = true;
-                File file = new File(PARENT_FILE_PATH, System.currentTimeMillis()+".jpeg");
+                File file = new File(PARENT_FILE_PATH, System.currentTimeMillis() + ".jpeg");
                 imageCapture.takePicture(file, new ImageCapture.OnImageSavedListener() {
                     @Override
                     public void onImageSaved(@NonNull @NotNull File file) {
@@ -102,7 +102,7 @@ public class CaptureActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ToastUtil.show(CaptureActivity.this,useCaseError.toString());
+                                ToastUtil.show(CaptureActivity.this, useCaseError.toString());
                             }
                         });
                     }
@@ -113,7 +113,7 @@ public class CaptureActivity extends AppCompatActivity {
             @Override
             public void onLongClick() {
                 takingPicture = false;
-                File file = new File(PARENT_FILE_PATH, System.currentTimeMillis()+".mp4");
+                File file = new File(PARENT_FILE_PATH, System.currentTimeMillis() + ".mp4");
                 videoCapture.startRecording(file, new VideoCapture.OnVideoSavedListener() {
                     @Override
                     public void onVideoSaved(File file) {
@@ -143,28 +143,28 @@ public class CaptureActivity extends AppCompatActivity {
 
     private void onFileSaved(File file) {
         outputFilePath = file.getAbsolutePath();
-        Og.d("CaptureActivity, onFileSaved, outputFilePath: "+ outputFilePath);
-        String mimeType = takingPicture?"image/jpeg":"video/mp4";
-        MediaScannerConnection.scanFile(this,new String[]{outputFilePath},new String[]{mimeType}, null);
-        PreviewActivity.startActivityForResult(this, outputFilePath,!takingPicture,"完成");
+        Og.d("CaptureActivity, onFileSaved, outputFilePath: " + outputFilePath);
+        String mimeType = takingPicture ? "image/jpeg" : "video/mp4";
+        MediaScannerConnection.scanFile(this, new String[]{outputFilePath}, new String[]{mimeType}, null);
+        PreviewActivity.startActivityForResult(this, outputFilePath, !takingPicture, "完成");
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_CODE){
+        if (requestCode == PERMISSION_CODE) {
             deniedPermissions.clear();
-            for (int i = 0; i<permissions.length;i++) {
+            for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int result = grantResults[i];
-                if (result!= PackageManager.PERMISSION_GRANTED){
+                if (result != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
                 }
             }
-            if (deniedPermissions.isEmpty()){
+            if (deniedPermissions.isEmpty()) {
                 bindCameraX();
-            }else {
+            } else {
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.capture_permission_message))
                         .setNegativeButton("不", new DialogInterface.OnClickListener() {
@@ -193,54 +193,54 @@ public class CaptureActivity extends AppCompatActivity {
                 .setTargetResolution(resolution)
                 .setTargetAspectRatio(rational)
                 .build();
-         preview = new Preview(config);
+        preview = new Preview(config);
 
-         imageCapture = new ImageCapture(
+        imageCapture = new ImageCapture(
                 new ImageCaptureConfig.Builder()
                         .setTargetAspectRatio(rational)
-        .setTargetResolution(resolution)
-        .setLensFacing(mLensFacing)
-        .setTargetRotation(cameraRotation)
-        .build());
+                        .setTargetResolution(resolution)
+                        .setLensFacing(mLensFacing)
+                        .setTargetRotation(cameraRotation)
+                        .build());
 
 
-         videoCapture = new VideoCapture(
+        videoCapture = new VideoCapture(
                 new VideoCaptureConfig.Builder()
-                .setTargetRotation(cameraRotation)
-                .setTargetResolution(resolution)
-                .setTargetAspectRatio(rational)
-                .setLensFacing(mLensFacing)
-                .setBitRate(3*1024*1024)
-                .setVideoFrameRate(25)
-                .build()
+                        .setTargetRotation(cameraRotation)
+                        .setTargetResolution(resolution)
+                        .setTargetAspectRatio(rational)
+                        .setLensFacing(mLensFacing)
+                        .setBitRate(3 * 1024 * 1024)
+                        .setVideoFrameRate(25)
+                        .build()
         );
 
-         preview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
-             @Override
-             public void onUpdated(Preview.PreviewOutput output) {
-                 // textView必须从布局中remove再add,才能正常渲染画面
-                 TextureView textureView = mBinding.textureView;
-                 ViewGroup parent = (ViewGroup) textureView.getParent();
-                 parent.removeView(textureView);
+        preview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
+            @Override
+            public void onUpdated(Preview.PreviewOutput output) {
+                // textView必须从布局中remove再add,才能正常渲染画面
+                TextureView textureView = mBinding.textureView;
+                ViewGroup parent = (ViewGroup) textureView.getParent();
+                parent.removeView(textureView);
 
-                 parent.addView(textureView,0);
-                 textureView.setSurfaceTexture(output.getSurfaceTexture());
+                parent.addView(textureView, 0);
+                textureView.setSurfaceTexture(output.getSurfaceTexture());
 
-             }
-         });
+            }
+        });
 
-         CameraX.unbindAll();
-         CameraX.bindToLifecycle(this,preview,imageCapture, videoCapture);
+        CameraX.unbindAll();
+        CameraX.bindToLifecycle(this, preview, imageCapture, videoCapture);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PreviewActivity.REQ_PREVIEW_CODE && resultCode == RESULT_OK){
+        if (requestCode == PreviewActivity.REQ_PREVIEW_CODE && resultCode == RESULT_OK) {
             Intent intent = new Intent();
             intent.putExtra(PREVIEW_RESULT_FILE_PATH, outputFilePath);
             // 设备竖屏，宽高需要互换，横屏不需要
-            intent.putExtra(PREVIEW_RESULT_FILE_WIDTH,resolution.getHeight());
+            intent.putExtra(PREVIEW_RESULT_FILE_WIDTH, resolution.getHeight());
             intent.putExtra(PREVIEW_RESULT_FILE_HEIGHT, resolution.getWidth());
             intent.putExtra(PREVIEW_RESULT_FILE_TYPE, !takingPicture);
             setResult(RESULT_OK);
@@ -248,7 +248,7 @@ public class CaptureActivity extends AppCompatActivity {
         }
     }
 
-    public static void startActivityForResult(Activity activity){
+    public static void startActivityForResult(Activity activity) {
         Intent intent = new Intent(activity, CaptureActivity.class);
         activity.startActivityForResult(intent, REQ_CODE_TO_CAPTURE);
     }
