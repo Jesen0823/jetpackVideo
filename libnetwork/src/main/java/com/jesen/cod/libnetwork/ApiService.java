@@ -88,6 +88,6 @@ public class ApiService {
     }
 
     public static <T> PostRequest<T> post(String url) {
-        return new PostRequest<>(url);
+        return new PostRequest<>(mBaseUrl + url);
     }
 }

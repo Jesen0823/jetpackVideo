@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,12 +45,19 @@ public abstract class ViewHandler {
 
     @CallSuper
     public void bindInitData(Feed feed) {
-        mInteractionBinding.setLifecycleOwner(mActivity);
+        mInteractionBinding.setOwner(mActivity);
+
         mFeed = feed;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,
                 LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(null);
-        mListAdapter = new FeedCommentAdapter(mActivity);
+        mListAdapter = new FeedCommentAdapter(mActivity){
+            @Override
+            public void onCurrentListChanged(@Nullable  PagedList<Comment> previousList, @Nullable @org.jetbrains.annotations.Nullable PagedList<Comment> currentList) {
+                boolean empty = currentList.size() <= 0;
+                handleEmpty(!empty);
+            }
+        };
         mRecyclerView.setAdapter(mListAdapter);
 
         detailViewModel.setItemId(mFeed.itemId);
@@ -95,7 +103,7 @@ public abstract class ViewHandler {
 
     }
 
-    private void handleEmpty(boolean hasData) {
+    public void handleEmpty(boolean hasData) {
         if (hasData) {
             if (mEmptyView != null) {
                 mListAdapter.removeHeaderView(mEmptyView);
@@ -106,8 +114,8 @@ public abstract class ViewHandler {
                 mEmptyView.setLayoutParams(new RecyclerView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 mEmptyView.setTitle(mActivity.getString(R.string.feed_comment_empty));
-                mListAdapter.addHeaderView(mEmptyView);
             }
+            mListAdapter.addHeaderView(mEmptyView);
         }
     }
 }

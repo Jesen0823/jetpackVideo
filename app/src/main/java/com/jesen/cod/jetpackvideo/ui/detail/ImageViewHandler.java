@@ -25,17 +25,25 @@ public class ImageViewHandler extends ViewHandler {
         super(activity);
 
         mImageBinding = DataBindingUtil.setContentView(activity, R.layout.activity_feed_detail_type_image);
-        mImageBinding.setFeed(mFeed);
         mRecyclerView = mImageBinding.recyclerView;
         mInteractionBinding = mImageBinding.bottomInteractionLayout;
+        mImageBinding.backClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.finish();
+            }
+        });
     }
 
     @Override
     public void bindInitData(Feed feed) {
         super.bindInitData(feed);
+        mImageBinding.setFeed(mFeed);
+
         mHeaderBinding = LayoutFeedDetailTypeImageHeaderBinding
                 .inflate(LayoutInflater.from(mActivity), mRecyclerView,false);
-        mHeaderBinding.setFeed(feed);
+        mHeaderBinding.setFeed(mFeed);
+
         ViImageView headerImage = mHeaderBinding.headerImage;
         headerImage.bindData(mFeed.cover,mFeed.width, mFeed.height,mFeed.width>mFeed.height?0:16);
 
@@ -53,6 +61,7 @@ public class ImageViewHandler extends ViewHandler {
                 mImageBinding.pageTitleTv.setVisibility(visible?View.GONE:View.VISIBLE);
             }
         });
+        handleEmpty(false);
     }
 
 }

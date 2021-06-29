@@ -14,6 +14,8 @@ public class FeedDetailActivity extends AppCompatActivity {
 
     private static final String KEY_FEED = "key_feed";
     private static final String KEY_CATEGORY = "key_category";
+    private ViewHandler viewHandler = null;
+
 
     public static void startFeedDetailActivity(Context context, Feed item, String category) {
         Intent intent = new Intent(context, FeedDetailActivity.class);
@@ -31,8 +33,6 @@ public class FeedDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-        ViewHandler viewHandler = null;
 
         if (feed.itemType ==Feed.TYPE_IMAGE_TEXT){
             viewHandler = new ImageViewHandler(this);
