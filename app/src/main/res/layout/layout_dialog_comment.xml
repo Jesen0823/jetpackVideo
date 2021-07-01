@@ -33,6 +33,7 @@
                 android:id="@+id/comment_icon_video"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_camera_white"
                 android:visibility="gone" />
 
@@ -48,7 +49,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
+            android:layout_height="1px"
             android:background="@color/color_gray2" />
 
         <LinearLayout

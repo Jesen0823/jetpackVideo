@@ -31,13 +31,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {
 
-    private View bufferView;
+    private final View bufferView;
     protected ViImageView cover, blur;
-    private ImageView playBtn;
+    private final ImageView playBtn;
     protected String mCategory;
     protected String mVideoUrl;
-    protected  boolean isPlaying;
-    protected  int mWidthPx;
+    protected boolean isPlaying;
+    protected int mWidthPx;
     protected int mHeightPx;
 
     public ListPlayerView(@NonNull Context context) {
@@ -49,10 +49,10 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     }
 
     public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr,0);
+        this(context, attrs, defStyleAttr, 0);
     }
 
-    public ListPlayerView(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
 
@@ -64,9 +64,9 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPlaying()){
+                if (isPlaying()) {
                     inActive();
-                }else {
+                } else {
                     onActive();
                 }
             }
@@ -92,8 +92,6 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     protected void setSize(int widthPx, int heightPx) {
         int maxWidth = PixUtils.getScreenWidth();
-        int maxHeight = maxWidth;
-
         int layoutWidth = maxWidth;
         int layoutHeight = 0;
 
@@ -103,8 +101,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
             coverWidth = maxWidth;
             layoutHeight = coverHeight = (int) (heightPx / (widthPx * 1.f / maxWidth));
         } else {
-            layoutHeight = coverHeight = maxHeight;
-            coverWidth = (int) (widthPx / (heightPx * 1f / maxHeight));
+            layoutHeight = coverHeight = maxWidth;
+            coverWidth = (int) (widthPx / (heightPx * 1f / maxWidth));
         }
 
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -158,8 +156,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         // 因为在列表页点击视频Item跳转到视频详情页的时候，详情页会复用列表页的播放器Exoplayer，
         // 然后和新创建的展示视频画面的View ExoplayerView相关联，达到视频无缝续播的效果
         //如果 我们再次返回列表页，则需要再次把播放器和ExoplayerView相关联
-        //pageListPlay.switchPlayerView(playerView, true);
-        pageListPlay.switchPlayerView(playerView);
+        pageListPlay.switchPlayerView(playerView, true);
+        //pageListPlay.switchPlayerView(playerView);
         ViewParent parent = playerView.getParent();
         if (parent != this) {
 
@@ -232,7 +230,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public boolean isPlaying() {
-        Og.d("ListPlayView, isPlaying: "+isPlaying);
+        Og.d("ListPlayView, isPlaying: " + isPlaying);
         return isPlaying;
     }
 
@@ -248,7 +246,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
             bufferView.setVisibility(VISIBLE);
         }
         isPlaying = playbackState == Player.STATE_READY && exoPlayer.getBufferedPosition() != 0 && playWhenReady;
-        playBtn.setImageResource(isPlaying ? R.drawable.icon_video_pause : R.drawable.icon_video_play);
+        playBtn.setImageResource(isPlaying ? R.drawable.detail_share : R.drawable.icon_video_play);
     }
 
     public View getPlayController() {

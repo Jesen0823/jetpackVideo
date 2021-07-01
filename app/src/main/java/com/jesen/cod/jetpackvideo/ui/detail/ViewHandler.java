@@ -9,6 +9,7 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.ItemKeyedDataSource;
@@ -20,7 +21,10 @@ import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedDetailBottomInteractionBinding;
 import com.jesen.cod.jetpackvideo.model.Comment;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
+import com.jesen.cod.jetpackvideo.ui.login.UserManager;
+import com.jesen.cod.libcommon.JetAppGlobal;
 import com.jesen.cod.libcommon.view.EmptyView;
 
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +79,19 @@ public abstract class ViewHandler {
         mInteractionBinding.inputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!UserManager.get().isLogin()) {
+                    LiveData<User> loginLiveData = UserManager.get().login(JetAppGlobal.getApplication());
+                    loginLiveData.observe(mActivity, new Observer<User>() {
+                        @Override
+                        public void onChanged(User user) {
+                            if (user != null) {
+                                showCommentDialog();
+                            }
+                            loginLiveData.removeObserver(this);
+                        }
+                    });
+                    return;
+                }
                 showCommentDialog();
             }
         });

@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
@@ -42,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommentDialog extends DialogFragment implements View.OnClickListener {
+public class CommentDialog extends AppCompatDialogFragment implements View.OnClickListener {
 
     private static final String URL_COMMENT = "/comment/addComment";
     private static final String KEY_ITEM_ID = "key_item_id";
@@ -105,6 +106,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
         mBinding.inputEdit.setFocusable(true);
         mBinding.inputEdit.setFocusableInTouchMode(true);
         mBinding.inputEdit.requestFocus();
+
         InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.showSoftInput(mBinding.inputEdit, 0);
     }
@@ -135,9 +137,9 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                 fileIsVideo = false;
                 fileWidth = 0;
                 fileHeight = 0;
-                mBinding.commentCover.setImageUrl(null);
+                mBinding.commentCover.setImageDrawable(null);
                 mBinding.commentExtLayout.setVisibility(View.GONE);
-                mBinding.commentVideo.setEnabled(false);
+                mBinding.commentVideo.setEnabled(true);
                 mBinding.commentVideo.setAlpha(1.0f);
 
                 break;

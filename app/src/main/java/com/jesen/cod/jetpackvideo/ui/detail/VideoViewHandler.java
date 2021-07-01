@@ -61,12 +61,12 @@ public class VideoViewHandler extends ViewHandler {
         mBinding.setFeed(feed);
 
         mCategory = mActivity.getIntent().getStringExtra(FeedDetailActivity.KEY_CATEGORY);
-        mBinding.playerViewFull.bindData(mCategory, mFeed.width, mFeed.height, mFeed.cover, mFeed.url);
+        mPlayView.bindData(mCategory, mFeed.width, mFeed.height, mFeed.cover, mFeed.url);
 
-        mBinding.playerViewFull.post(new Runnable() {
+        mPlayView.post(new Runnable() {
             @Override
             public void run() {
-                boolean fullScreen = mBinding.playerViewFull.getBottom() >= mBinding.coordinator.getBottom();
+                boolean fullScreen = mPlayView.getBottom() >= coordinator.getBottom();
                 setViewAppearance(fullScreen);
             }
         });
@@ -81,13 +81,17 @@ public class VideoViewHandler extends ViewHandler {
 
     private void setViewAppearance(boolean fullScreen) {
         mBinding.setFullScreen(fullScreen);
+        mInteractionBinding.setFullScreen(fullScreen);
         mBinding.fullscreenAuthorInfo.getRoot().setVisibility(fullScreen ? View.VISIBLE : View.GONE);
+        //底部互动区域的高度
         int interactionHeight = mInteractionBinding.getRoot().getMeasuredHeight();
-        int controllerHeight = mBinding.playerViewFull.getPlayController().getMeasuredHeight();
-        int controllerBottom = mBinding.playerViewFull.getPlayController().getBottom();
+        //播放控制器的高度
+        int controllerHeight = mPlayView.getPlayController().getMeasuredHeight();
+        //播放控制器的bottom值
+        int controllerBottom = mPlayView.getPlayController().getBottom();
 
         // 全屏播放时调整进度条控制区高度，防止挡住底部互动栏
-        mBinding.playerViewFull.getPlayController().setY(
+        mPlayView.getPlayController().setY(
                 fullScreen ? controllerBottom - interactionHeight - controllerHeight
                         : controllerBottom - controllerHeight);
     }
@@ -96,7 +100,7 @@ public class VideoViewHandler extends ViewHandler {
     public void onPause() {
         super.onPause();
         if (!backPressed) {
-            mBinding.playerViewFull.inActive();
+            mPlayView.inActive();
         }
     }
 
@@ -104,7 +108,7 @@ public class VideoViewHandler extends ViewHandler {
     public void onResume() {
         super.onResume();
         backPressed = false;
-        mBinding.playerViewFull.onActive();
+        mPlayView.onActive();
     }
 
 
@@ -113,6 +117,6 @@ public class VideoViewHandler extends ViewHandler {
         super.onBackPressed();
         backPressed = true;
         // 恢复播放器位置
-        mBinding.playerViewFull.getPlayController().setTranslationY(0);
+        mPlayView.getPlayController().setTranslationY(0);
     }
 }

@@ -52,6 +52,7 @@ public class FullScreenPlayerView extends ListPlayerView {
     protected void setSize(int widthPx, int heightPx) {
         if (widthPx >= heightPx) {
             super.setSize(widthPx, heightPx);
+            return;
         }
 
         int maxWidth = PixUtils.getScreenWidth();
@@ -81,8 +82,8 @@ public class FullScreenPlayerView extends ListPlayerView {
         }
 
         //主动关联播放器与exoplayerview
-        // pageListPlay.switchPlayerView(playerView, true);
-        pageListPlay.switchPlayerView(playerView);
+        // pageListPlay.switchPlayerView(playerView);
+        pageListPlay.switchPlayerView(playerView,true);
         ViewParent parent = playerView.getParent();
         if (parent != this) {
 
@@ -128,7 +129,8 @@ public class FullScreenPlayerView extends ListPlayerView {
     public void inActive() {
         super.inActive();
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
-        pageListPlay.switchPlayerView(null);
+        //主动切断exoplayer与视频播放器的联系
+        pageListPlay.switchPlayerView(mExoPlayerView, false);
     }
 
     @Override
@@ -144,7 +146,7 @@ public class FullScreenPlayerView extends ListPlayerView {
 
             if (mExoPlayerView != null) {
                 ViewGroup.LayoutParams playViewParams = mExoPlayerView.getLayoutParams();
-                if (playViewParams != null) {
+                if (playViewParams != null && playViewParams.width>0 && playViewParams.height>0) {
                     float scaleX = coverLayoutParams.width * 1.0f / playViewParams.width;
                     float scaleY = coverLayoutParams.height * 1.0f / playViewParams.height;
 
