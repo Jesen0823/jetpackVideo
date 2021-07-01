@@ -35,7 +35,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     protected ViImageView cover, blur;
     private ImageView playBtn;
     protected String mCategory;
-    private String mVideoUrl;
+    protected String mVideoUrl;
     protected  boolean isPlaying;
     protected  int mWidthPx;
     protected int mHeightPx;

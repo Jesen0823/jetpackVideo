@@ -26,7 +26,10 @@
         <com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView
             android:id="@+id/player_view_full"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_behavior=".ui.detail.ViewZoomBehavior"
+            app:min_height="200dp"
+            app:scrolling_id="@+id/recycler_view"/>
 
         <!-- 非全屏时播放器下边作者栏 -->
         <include

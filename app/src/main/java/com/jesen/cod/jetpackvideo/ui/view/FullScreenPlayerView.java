@@ -21,13 +21,13 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlay;
 import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 public class FullScreenPlayerView extends ListPlayerView {
     private final PlayerView mExoPlayerView;
-    private String mVideoUrl;
 
     public FullScreenPlayerView(@NonNull @NotNull Context context) {
         this(context, null);
@@ -68,8 +68,6 @@ public class FullScreenPlayerView extends ListPlayerView {
         coverLayoutParams.height = maxHeight;
         coverLayoutParams.gravity = Gravity.CENTER;
         cover.setLayoutParams(coverLayoutParams);
-
-
     }
 
     @Override
@@ -108,6 +106,9 @@ public class FullScreenPlayerView extends ListPlayerView {
 
         //如果是同一个视频资源,则不需要从重新创建mediaSource。
         //但需要onPlayerStateChanged 否则不会触发onPlayerStateChanged()
+        Og.d("FullScreenPlayerView, pageListPlay.playUrl: "+ pageListPlay.playUrl);
+        Og.d("FullScreenPlayerView, mVideoUrl: "+ mVideoUrl);
+
         if (TextUtils.equals(pageListPlay.playUrl, mVideoUrl)) {
             onPlayerStateChanged(true, Player.STATE_READY);
         } else {
@@ -128,5 +129,30 @@ public class FullScreenPlayerView extends ListPlayerView {
         super.inActive();
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
         pageListPlay.switchPlayerView(null);
+    }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        if (mHeightPx > mWidthPx) {
+            int layoutWidth = params.width;
+            int layoutHeight = params.height;
+            ViewGroup.LayoutParams coverLayoutParams = cover.getLayoutParams();
+            // 播放器布局保持等比缩放，以适配滑动过程中视图高度缩小时，仍保持宽高比
+            coverLayoutParams.width = (int) (mWidthPx / (mHeightPx * 1.0f / layoutHeight));
+            coverLayoutParams.height = layoutHeight;
+            cover.setLayoutParams(coverLayoutParams);
+
+            if (mExoPlayerView != null) {
+                ViewGroup.LayoutParams playViewParams = mExoPlayerView.getLayoutParams();
+                if (playViewParams != null) {
+                    float scaleX = coverLayoutParams.width * 1.0f / playViewParams.width;
+                    float scaleY = coverLayoutParams.height * 1.0f / playViewParams.height;
+
+                    mExoPlayerView.setScaleX(scaleX);
+                    mExoPlayerView.setScaleY(scaleY);
+                }
+            }
+        }
+        super.setLayoutParams(params);
     }
 }

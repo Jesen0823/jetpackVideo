@@ -33,10 +33,10 @@ public class PageListPlayManager {
         Application application = JetAppGlobal.getApplication();
         // 一个可以下载视频的工厂类,创建http视频资源如何加载的工厂对象
         DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory(
-                Util.getUserAgent(application,application.getPackageName()));
+                Util.getUserAgent(application, application.getPackageName()));
         //创建缓存，指定缓存位置，和缓存策略,为最近最少使用原则,最大为200m
         Cache cache = new SimpleCache(application.getCacheDir(),
-                new LeastRecentlyUsedCacheEvictor(1024*1024*200));
+                new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 200));
 
         // 缓存的写入,把缓存对象cache和负责缓存数据读取、写入的工厂类CacheDataSinkFactory 相关联
         CacheDataSinkFactory cacheDataSinkFactory = new CacheDataSinkFactory(cache, Long.MAX_VALUE);
@@ -51,36 +51,41 @@ public class PageListPlayManager {
          *       @Nullable CacheDataSource.EventListener eventListener  缓存数据读取的回调
          */
         CacheDataSourceFactory cacheDataSourceFactory
-                = new CacheDataSourceFactory(cache, dataSourceFactory, new FileDataSourceFactory(),
-                cacheDataSinkFactory, CacheDataSource.FLAG_BLOCK_ON_CACHE, null);
+                = new CacheDataSourceFactory(
+                cache,
+                dataSourceFactory,
+                new FileDataSourceFactory(),
+                cacheDataSinkFactory,
+                CacheDataSource.FLAG_BLOCK_ON_CACHE,
+                null);
 
         /*
         最后 还需要创建一个 MediaSource 媒体资源 加载的工厂类
         因为由它创建的MediaSource 能够实现边缓冲边播放的效果,
         如果需要播放hls,m3u8 则需要创建DashMediaSource.Factory()
         */
-         mediaSourceFactory = new ProgressiveMediaSource.Factory(cacheDataSourceFactory);
+        mediaSourceFactory = new ProgressiveMediaSource.Factory(cacheDataSourceFactory);
     }
 
     /*
-    *  创建MediaSource数据源
-    * */
-    public static MediaSource createMediaSource(String url){
+     *  创建MediaSource数据源
+     * */
+    public static MediaSource createMediaSource(String url) {
         return mediaSourceFactory.createMediaSource(Uri.parse(url));
     }
 
-    public static PageListPlay get(String pageName){
+    public static PageListPlay get(String pageName) {
         PageListPlay pageListPlay = sPageListPlayHashMap.get(pageName);
-        if (pageListPlay == null){
+        if (pageListPlay == null) {
             pageListPlay = new PageListPlay();
             sPageListPlayHashMap.put(pageName, pageListPlay);
         }
         return pageListPlay;
     }
 
-    public static void removePageListPlay(String pageName){
+    public static void removePageListPlay(String pageName) {
         PageListPlay pageListPlay = sPageListPlayHashMap.get(pageName);
-        if (pageListPlay != null){
+        if (pageListPlay != null) {
             pageListPlay.release();
         }
     }

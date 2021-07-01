@@ -14,11 +14,15 @@ import com.jesen.cod.jetpackvideo.databinding.LayoutFeedDetailTypeImageHeaderBin
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedDetailTypeVideoHeaderBinding;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedDetailTypeVideoHeaderBindingImpl;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView;
 
 public class VideoViewHandler extends ViewHandler {
 
     private ActivityFeedDetailTypeVideoBinding mBinding;
     private String mCategory;
+    private FullScreenPlayerView mPlayView;
+    private final CoordinatorLayout coordinator;
+
 
     // 是否点击了返回键
     private boolean backPressed;
@@ -29,9 +33,26 @@ public class VideoViewHandler extends ViewHandler {
         mBinding = DataBindingUtil.setContentView(activity, R.layout.activity_feed_detail_type_video);
         mInteractionBinding = mBinding.bottomInteraction;
         mRecyclerView = mBinding.recyclerView;
+        mPlayView = mBinding.playerViewFull;
+        coordinator = mBinding.coordinator;
+
         View authorInfoRoot = mBinding.authorInfo.getRoot();
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) authorInfoRoot.getLayoutParams();
         params.setBehavior(new ViewAnchorBehavior(R.id.player_view_full));
+
+        // 设置滑动效果
+        CoordinatorLayout.LayoutParams playViewParams = (CoordinatorLayout.LayoutParams) mPlayView.getLayoutParams();
+        ViewZoomBehavior behavior = (ViewZoomBehavior) playViewParams.getBehavior();
+        behavior.setViewZoomCallback(new ViewZoomBehavior.ViewZoomCallback() {
+            @Override
+            public void onDragZoom(int height) {
+                int bottom = mPlayView.getBottom();
+                boolean moveUp = height < bottom;
+                boolean fullScreen = moveUp ? height >= coordinator.getBottom()
+                        - mInteractionBinding.getRoot().getHeight() : height >= coordinator.getBottom();
+                setViewAppearance(fullScreen);
+            }
+        });
     }
 
     @Override
