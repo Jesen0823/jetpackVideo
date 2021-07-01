@@ -52,9 +52,9 @@ public abstract class ViewHandler {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,
                 LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setItemAnimator(null);
-        mListAdapter = new FeedCommentAdapter(mActivity){
+        mListAdapter = new FeedCommentAdapter(mActivity) {
             @Override
-            public void onCurrentListChanged(@Nullable  PagedList<Comment> previousList, @Nullable @org.jetbrains.annotations.Nullable PagedList<Comment> currentList) {
+            public void onCurrentListChanged(@Nullable PagedList<Comment> previousList, @Nullable @org.jetbrains.annotations.Nullable PagedList<Comment> currentList) {
                 boolean empty = currentList.size() <= 0;
                 handleEmpty(!empty);
             }
@@ -75,33 +75,21 @@ public abstract class ViewHandler {
         mInteractionBinding.inputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (commentDialog == null) {
-                    commentDialog = CommentDialog.getInstance(mFeed.itemId);
-                }
-                commentDialog.setCommentAddResultListener(new CommentDialog.CommentAddResultListener() {
-                    @Override
-                    public void onAddComment(Comment comment) {
-                        MutableItemKeyedDataSource<Integer, Comment> dataSource
-                                = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) detailViewModel.getDataSource()) {
-
-                            @NonNull
-                            @Override
-                            public @NotNull Integer getKey(@NonNull @NotNull Comment item) {
-                                return item.id;
-                            }
-                        };
-
-                        dataSource.data.add(comment);
-                        dataSource.data.addAll(mListAdapter.getCurrentList());
-                        // 使得新添加/发布的评论处于列表的第一项
-                        PagedList<Comment> pagedList = dataSource.buildNewItemList(mListAdapter.getCurrentList().getConfig());
-                        mListAdapter.submitList(pagedList);
-                    }
-                });
-                commentDialog.show(mActivity.getSupportFragmentManager(), "cmt_dialog");
+                showCommentDialog();
             }
         });
 
+    }
+
+    private void showCommentDialog() {
+        if (commentDialog == null) {
+            commentDialog = CommentDialog.getInstance(mFeed.itemId);
+        }
+        commentDialog.setCommentAddResultListener(comment -> {
+            handleEmpty(true);
+            mListAdapter.addAndRefreshList(comment);
+        });
+        commentDialog.show(mActivity.getSupportFragmentManager(), "comment_dialog");
     }
 
     public void handleEmpty(boolean hasData) {
@@ -120,9 +108,9 @@ public abstract class ViewHandler {
         }
     }
 
-    public  void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (commentDialog != null && commentDialog.isAdded()){
-            commentDialog.onActivityResult(requestCode, resultCode,data);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (commentDialog != null && commentDialog.isAdded()) {
+            commentDialog.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

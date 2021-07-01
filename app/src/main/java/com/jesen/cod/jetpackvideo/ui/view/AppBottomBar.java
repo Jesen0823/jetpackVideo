@@ -29,7 +29,7 @@ import java.util.List;
 public class AppBottomBar extends BottomNavigationView {
 
     private static final int[] icons = {R.drawable.ic_home_24, R.drawable.ic_sofa_toll_24,
-            R.drawable.ic_publish_add_48, R.drawable.ic_find_24, R.drawable.ic_mine_24};
+            R.drawable.post_add, R.drawable.ic_find_24, R.drawable.ic_mine_24};
 
     private BottomBar config;
 

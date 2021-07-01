@@ -2,16 +2,19 @@ package com.jesen.cod.jetpackvideo.ui.detail;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +32,8 @@ import com.jesen.cod.libcommon.utils.FileUtil;
 import com.jesen.cod.jetpackvideo.utils.ToastUtil;
 import com.jesen.cod.libcommon.JetAppGlobal;
 import com.jesen.cod.libcommon.dialog.LoadingDialog;
+import com.jesen.cod.libcommon.utils.PixUtils;
+import com.jesen.cod.libcommon.view.ViewHelper;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
@@ -68,23 +73,53 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     }
 
     @Nullable
-    @org.jetbrains.annotations.Nullable
     @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        mBinding = LayoutDialogCommentBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Window window = getDialog().getWindow();
+        window.setWindowAnimations(0);
+
+        mBinding = LayoutDialogCommentBinding.inflate(inflater, window.findViewById(android.R.id.content), false);
         mBinding.commentVideo.setOnClickListener(this);
         mBinding.commentDelete.setOnClickListener(this);
         mBinding.commentSend.setOnClickListener(this);
 
-        Window window = getDialog().getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
         this.mItemId = getArguments().getLong(KEY_ITEM_ID, 0L);
 
+        ViewHelper.setViewOutline(mBinding.getRoot(), PixUtils.dp2px(10), ViewHelper.RADIUS_TOP);
+
+        mBinding.getRoot().post(new Runnable() {
+            @Override
+            public void run() {
+                showSoftInputMethod();
+            }
+        });
+        dismissWhenPressBack();
+
         return mBinding.getRoot();
     }
 
+    private void showSoftInputMethod() {
+        mBinding.inputEdit.setFocusable(true);
+        mBinding.inputEdit.setFocusableInTouchMode(true);
+        mBinding.inputEdit.requestFocus();
+        InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.showSoftInput(mBinding.inputEdit, 0);
+    }
+
+    private void dismissWhenPressBack() {
+        mBinding.inputEdit.setOnBackKeyEventListener(() -> {
+            mBinding.inputEdit.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dismiss();
+                }
+            }, 200);
+            return true;
+        });
+    }
 
     @Override
     public void onClick(View view) {
@@ -112,7 +147,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CaptureActivity.REQ_CODE_TO_CAPTURE && resultCode == Activity.RESULT_OK) {
             filePath = data.getStringExtra(CaptureActivity.PREVIEW_RESULT_FILE_PATH);
@@ -129,11 +164,15 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
             }
 
             mBinding.commentVideo.setEnabled(false);
-            mBinding.commentVideo.setAlpha(.5f);
+            mBinding.commentVideo.setAlpha(.8f);
         }
     }
 
     private void publishComment() {
+        if (TextUtils.isEmpty(mBinding.inputEdit.getText())) {
+            ToastUtil.show(getContext(), "文字不可为空");
+            return;
+        }
 
         if (fileIsVideo && !TextUtils.isEmpty(filePath)) { // 上传视频
             FileUtil.generateVideoCover(filePath).observe(this, new Observer<String>() {
@@ -143,9 +182,9 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                 }
             });
 
-        }else if (!TextUtils.isEmpty(filePath)){ // 上传图片
+        } else if (!TextUtils.isEmpty(filePath)) { // 上传图片
             uploadFileToServer(null, filePath);
-        }else {
+        } else {
             publish();
         }
     }
@@ -157,20 +196,20 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     @SuppressLint("RestrictedApi")
     private void uploadFileToServer(String coverPath, String videoPath) {
         // 线程同步：AtomicInteger,CountDownLatch,CyclicBarrier
-        AtomicInteger count = new AtomicInteger(1);
-
         showHideLoadingDialog(true);
-        if (!TextUtils.isEmpty(coverPath)){
+
+        AtomicInteger count = new AtomicInteger(1);
+        if (!TextUtils.isEmpty(coverPath)) {
             count.set(2);
             ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
                     int remain = count.decrementAndGet();
                     coverUrl = FileUploadManager.upload(coverPath);
-                    if (remain <=0){
-                        if (!TextUtils.isEmpty(fileUrl) && !TextUtils.isEmpty(coverUrl)){
+                    if (remain <= 0) {
+                        if (!TextUtils.isEmpty(fileUrl) && !TextUtils.isEmpty(coverUrl)) {
                             publish();
-                        }else {
+                        } else {
                             showHideLoadingDialog(false);
                             ToastUtil.showOnUI(getContext(), getString(R.string.file_upload_failed));
                         }
@@ -183,11 +222,11 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
             public void run() {
                 int remain = count.decrementAndGet();
                 fileUrl = FileUploadManager.upload(filePath);
-                if (remain <= 0){
-                    if (!TextUtils.isEmpty(fileUrl) || !TextUtils.isEmpty(coverPath) && !TextUtils.isEmpty(coverUrl)){
+                if (remain <= 0) {
+                    if (!TextUtils.isEmpty(fileUrl) || !TextUtils.isEmpty(coverPath) && !TextUtils.isEmpty(coverUrl)) {
                         publish();
                     }
-                }else {
+                } else {
                     showHideLoadingDialog(false);
                     ToastUtil.showOnUI(getContext(), getString(R.string.file_upload_failed));
                 }
@@ -197,15 +236,12 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
 
     private void publish() {
         String inputText = mBinding.inputEdit.getText().toString();
-        /*if (TextUtils.isEmpty(inputText)) {
-            return;
-        }*/
         ApiService.post(URL_COMMENT)
                 .addParams("userId", UserManager.get().getUserId())
                 .addParams("itemId", mItemId)
                 .addParams("commentText", inputText)
-                .addParams("image_url", fileIsVideo?coverUrl:fileUrl)
-                .addParams("videoUrl", fileUrl)
+                .addParams("image_url", fileIsVideo ? coverUrl : fileUrl)
+                .addParams("videoUrl", fileIsVideo ? fileUrl : null)
                 .addParams("width", fileWidth)
                 .addParams("height", fileHeight)
                 .execute(new JsonCallback<Comment>() {
@@ -219,36 +255,59 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                     @Override
                     public void onError(ApiResponse<Comment> response) {
                         showHideLoadingDialog(false);
-                                ToastUtil.showOnUI(JetAppGlobal.getApplication(), "评论失败，" + response.message);
+                        ToastUtil.showOnUI(JetAppGlobal.getApplication(), "评论失败，" + response.message);
                     }
                 });
     }
 
+    @SuppressLint("RestrictedApi")
     private void showHideLoadingDialog(boolean isShow) {
         if (isShow) {
             if (loadingDialog == null) {
                 loadingDialog = new LoadingDialog(getContext());
+                loadingDialog.setLoadingText(getString(R.string.upload_text));
+                loadingDialog.setCanceledOnTouchOutside(false);
+                loadingDialog.setCancelable(false);
             }
-            loadingDialog.setLoadingText(getString(R.string.upload_text));
-            loadingDialog.show();
-        }else {
-            if (loadingDialog != null){
-                loadingDialog.dismiss();
+            if (!loadingDialog.isShowing()) {
+                loadingDialog.show();
+            }
+        } else {
+            if (loadingDialog != null) {
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    ArchTaskExecutor.getMainThreadExecutor().execute(() -> {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
+                    });
+                } else if (loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
             }
         }
     }
 
     @SuppressLint("RestrictedApi")
     private void onCommentSuccess(Comment body) {
-        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                ToastUtil.show(JetAppGlobal.getApplication(), "评论成功");
+        ToastUtil.showOnUI(JetAppGlobal.getApplication(), "评论成功");
+        ArchTaskExecutor.getMainThreadExecutor().execute(() -> {
+            if (mCommentResultListener != null) {
+                mCommentResultListener.onAddComment(body);
             }
+            dismiss();
         });
-        if (mCommentResultListener != null) {
-            mCommentResultListener.onAddComment(body);
-        }
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        showHideLoadingDialog(false);
+        filePath = null;
+        fileUrl = null;
+        coverUrl = null;
+        fileIsVideo = false;
+        fileWidth = 0;
+        fileHeight = 0;
     }
 
     public interface CommentAddResultListener {

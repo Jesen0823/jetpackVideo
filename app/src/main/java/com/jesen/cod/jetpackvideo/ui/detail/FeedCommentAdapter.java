@@ -34,12 +34,12 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
     protected FeedCommentAdapter(Context context) {
         super(new DiffUtil.ItemCallback<Comment>() {
             @Override
-            public boolean areItemsTheSame(@NonNull @NotNull Comment oldItem, @NonNull @NotNull Comment newItem) {
+            public boolean areItemsTheSame(@NonNull Comment oldItem, @NonNull Comment newItem) {
                 return oldItem.id == newItem.id;
             }
 
             @Override
-            public boolean areContentsTheSame(@NonNull @NotNull Comment oldItem, @NonNull @NotNull Comment newItem) {
+            public boolean areContentsTheSame(@NonNull Comment oldItem, @NonNull Comment newItem) {
                 return oldItem.equals(newItem);
             }
         });
@@ -71,7 +71,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
                                             = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) getCurrentList().getDataSource()) {
                                         @NonNull
                                         @Override
-                                        public @NotNull Integer getKey(@NonNull @NotNull Comment item) {
+                                        public @NotNull Integer getKey(@NotNull Comment item) {
                                             return item.id;
                                         }
                                     };
@@ -101,11 +101,27 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
         });
     }
 
+    public void addAndRefreshList(Comment comment) {
+        PagedList<Comment> currentList = getCurrentList();
+        MutableItemKeyedDataSource<Integer, Comment> dataSource =
+                new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) currentList.getDataSource()) {
+                    @NonNull
+                    @Override
+                    public @NotNull Integer getKey(@NonNull Comment item) {
+                        return item.id;
+                    }
+                };
+        dataSource.data.add(comment);
+        dataSource.data.addAll(currentList);
+        PagedList<Comment> pagedList = dataSource.buildNewItemList(currentList.getConfig());
+        submitList(pagedList);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private LayoutFeedCommentListItemBinding mBinding;
 
-        public ViewHolder(@NonNull @NotNull View itemView, LayoutFeedCommentListItemBinding binding) {
+        public ViewHolder(@NonNull View itemView, LayoutFeedCommentListItemBinding binding) {
             super(itemView);
             mBinding = binding;
         }

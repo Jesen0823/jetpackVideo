@@ -117,6 +117,5 @@ public class LiveDataBus {
                 mObserver.onChanged(t);
             }
         }
-
     }
 }

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:animateLayoutChanges="false"
         android:background="@color/color_white"
         android:orientation="vertical">
 
@@ -17,10 +18,10 @@
             android:id="@+id/comment_ext_layout"
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
-            android:visibility="gone"
             android:layout_marginLeft="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dp_5"
-            android:layout_marginBottom="@dimen/dp_5">
+            android:layout_marginBottom="@dimen/dp_5"
+            android:visibility="gone">
 
             <com.jesen.cod.jetpackvideo.ui.view.ViImageView
                 android:id="@+id/comment_cover"
@@ -30,8 +31,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/comment_icon_video"
-                android:layout_width="@dimen/dimen_20"
-                android:layout_height="@dimen/dimen_20"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/ic_camera_white"
                 android:visibility="gone" />
 
@@ -55,12 +56,13 @@
             android:layout_height="@dimen/dp_45"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/dp_10">
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10">
 
-            <EditText
+            <com.jesen.cod.libcommon.view.ViEditTextView
                 android:id="@+id/input_edit"
                 android:layout_width="@dimen/dp_0"
-                android:layout_height="@dimen/dp_40"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_view"
                 android:gravity="center_vertical"
@@ -72,8 +74,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/comment_video"
-                android:layout_width="@dimen/dp_36"
-                android:layout_height="@dimen/dp_36"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:src="@drawable/video_icon" />
 
@@ -84,10 +86,13 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:backgroundTint="@color/color_theme"
                 android:gravity="center"
-                android:paddingHorizontal="@dimen/dp_13"
-                android:paddingVertical="@dimen/dp_4"
+                android:paddingLeft="@dimen/dp_11"
+                android:paddingTop="@dimen/dp_3"
+                android:paddingRight="@dimen/dp_11"
+                android:paddingBottom="@dimen/dp_3"
                 android:text="@string/comment_send_text"
                 android:textColorHint="@color/white"
+                app:backgroundTint="@color/color_theme"
                 app:cornerRadius="@dimen/dp_6" />
         </LinearLayout>
 

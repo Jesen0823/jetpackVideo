@@ -8,10 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.User;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
@@ -21,6 +20,9 @@ import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,6 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onComplete(Object o) {
             JSONObject response = (JSONObject) o;
+            Og.d("LoginActivity, loginListener, onComplete, response:"+response.toString());
             try {
                 String openid = response.getString("openid");
                 String access_token = response.getString("access_token");
@@ -88,14 +91,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userInfo.getUserInfo(new IUiListener() {
             @Override
             public void onComplete(Object o) {
-                org.json.JSONObject response = (org.json.JSONObject) o;
+                JSONObject response = (JSONObject) o;
+                Og.d("LoginActivity, getUserInfo, onComplete, response:"+response.toString());
 
                 try {
                     String nickname = response.getString("nickname");
                     String figureurl_2 = response.getString("figureurl_2");
 
                     save(nickname, figureurl_2, openid, expires_time);
-                } catch (org.json.JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -129,6 +133,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onSuccess(ApiResponse<User> response) {
                         if (response.body != null) {
+                            Og.d("LoginActivity, save, onSuccess, userId:"+response.body.userId);
                             UserManager.get().save(response.body);
                             finish();
                         } else {

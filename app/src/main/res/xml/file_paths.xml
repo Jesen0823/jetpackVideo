@@ -6,5 +6,9 @@
     <files-path
         name="cameraX"
         path="/cameraX/" />
+    <external-path
+        name="DCIM"
+        path="/DCIM"
+        />
 
 </paths>

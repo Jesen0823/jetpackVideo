@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.jesen.cod.jetpackvideo.MainActivity;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.libcommon.JetAppGlobal;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
 import com.jesen.cod.libnetwork.JsonCallback;
@@ -38,6 +39,8 @@ public class UserManager {
 
     public void save(User user){
         mUser = user;
+        Og.d("UserManager, save, mUser:"+mUser.userId+", name: "+ mUser.name);
+
         CacheManager.save(KEY_CACHE_USER, user);
         if (getUserLiveData().hasObservers()){
             getUserLiveData().postValue(user);

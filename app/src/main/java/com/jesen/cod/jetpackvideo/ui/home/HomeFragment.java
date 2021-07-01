@@ -72,6 +72,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
             @Override
             public void onStartFeedDetailActivity(Feed feed) {
                 boolean isVideo = feed.itemType == Feed.TYPE_VIDEO;
+                // 为了无缝续播，视频类型跳转页面，不暂停
                 shouldPause = !isVideo;
             }
 
@@ -137,7 +138,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     @Override
     public void onPause() {
         Og.d("HomeFragment, onPause, feedType:"+ mFeedType);
-        //如果是跳转到详情页,咱们就不需要 暂停视频播放了
+        //如果是跳转到详情页,不暂停视频播放
         //如果是前后台切换 或者去别的页面了 都是需要暂停视频播放的
         if (shouldPause) {
             playDetector.onPause();
