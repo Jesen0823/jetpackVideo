@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="com.jesen.cod.jetpackvideo.model.Feed" />
+
+        <variable
+            name="fullScreen"
+            type="Boolean" />
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter" />
+
+        <import type="com.jesen.cod.libcommon.utils.PixUtils" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView
+            android:id="@+id/player_view_full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- 非全屏时播放器下边作者栏 -->
+        <include
+            android:id="@+id/author_info"
+            layout="@layout/activity_feed_detail_author_info"
+            app:feed="@{feed}"
+            app:fullScreen="@{false}"
+            app:leftMargin="@{PixUtils.dp2px(16)}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior=".ui.detail.ViewAnchorBehavior"
+            app:anchorId="@+id/author_info"
+            android:layout_marginTop="@dimen/dp_10"
+            android:overScrollMode="never" />
+
+        <include
+            android:id="@+id/bottom_interaction"
+            layout="@layout/layout_feed_detail_bottom_interaction"
+            app:feed="@{feed}"
+            app:fullScreen="@{fullScreen}" />
+
+        <!-- 全屏时顶部作者栏 -->
+        <include
+            android:id="@+id/fullscreen_author_info"
+            layout="@layout/activity_feed_detail_author_info"
+            app:feed="@{feed}"
+            app:fullScreen="@{fullScreen}"
+            app:leftMargin="@{PixUtils.dp2px(60)}" />
+
+        <ImageView
+            android:id="@+id/page_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="18dp"
+            android:src="@drawable/back_left_arrow" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

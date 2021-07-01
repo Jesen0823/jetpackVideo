@@ -27,12 +27,14 @@ import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
 import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {
 
     private View bufferView;
-    private ViImageView cover, blur;
+    protected ViImageView cover, blur;
     private ImageView playBtn;
-    private String mCategory;
+    protected String mCategory;
     private String mVideoUrl;
     protected  boolean isPlaying;
     protected  int mWidthPx;
@@ -47,7 +49,11 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     }
 
     public ListPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr,0);
+    }
+
+    public ListPlayerView(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
 
         bufferView = findViewById(R.id.buffer_view);
@@ -84,7 +90,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         setSize(widthPx, heightPx);
     }
 
-    private void setSize(int widthPx, int heightPx) {
+    protected void setSize(int widthPx, int heightPx) {
         int maxWidth = PixUtils.getScreenWidth();
         int maxHeight = maxWidth;
 
@@ -152,7 +158,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         // 因为在列表页点击视频Item跳转到视频详情页的时候，详情页会复用列表页的播放器Exoplayer，
         // 然后和新创建的展示视频画面的View ExoplayerView相关联，达到视频无缝续播的效果
         //如果 我们再次返回列表页，则需要再次把播放器和ExoplayerView相关联
-        pageListPlay.switchPlayerView(playerView, true);
+        //pageListPlay.switchPlayerView(playerView, true);
+        pageListPlay.switchPlayerView(playerView);
         ViewParent parent = playerView.getParent();
         if (parent != this) {
 
@@ -225,6 +232,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public boolean isPlaying() {
+        Og.d("ListPlayView, isPlaying: "+isPlaying);
         return isPlaying;
     }
 
@@ -250,8 +258,9 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //点击该区域时 我们诸主动让视频控制器显示出来
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
-
+        pageListPlay.mControllerView.show();
         return true;
     }
 }

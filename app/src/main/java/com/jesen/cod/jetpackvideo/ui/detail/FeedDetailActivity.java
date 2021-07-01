@@ -12,7 +12,7 @@ import com.jesen.cod.jetpackvideo.model.Feed;
 public class FeedDetailActivity extends AppCompatActivity {
 
     private static final String KEY_FEED = "key_feed";
-    private static final String KEY_CATEGORY = "key_category";
+    protected static final String KEY_CATEGORY = "key_category";
     private ViewHandler viewHandler = null;
 
 
@@ -47,6 +47,31 @@ public class FeedDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (viewHandler != null){
             viewHandler.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (viewHandler != null){
+            viewHandler.onPause();
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (viewHandler != null){
+            viewHandler.onResume();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (viewHandler != null){
+            viewHandler.onBackPressed();
         }
     }
 }

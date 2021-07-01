@@ -53,17 +53,17 @@ public class PageListPlay {
     }
 
     public void release() {
-        if (exoPlayer != null){
+        if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.stop(true);
             exoPlayer.release();
             exoPlayer = null;
         }
-        if (mPlayerView != null){
+        if (mPlayerView != null) {
             mPlayerView.setPlayer(null);
             mPlayerView = null;
         }
-        if (mControllerView != null){
+        if (mControllerView != null) {
             mControllerView.setPlayer(null);
             mControllerView.setVisibilityListener(null);
             mControllerView = null;
@@ -79,5 +79,14 @@ public class PageListPlay {
     public void switchPlayerView(PlayerView newPlayerView, boolean attach) {
         mPlayerView.setPlayer(attach ? null : exoPlayer);
         newPlayerView.setPlayer(attach ? exoPlayer : null);
+    }
+
+    public void switchPlayerView(PlayerView playerView) {
+        if (playerView != null && playerView != mPlayerView) {
+            this.mPlayerView.setPlayer(null);
+            playerView.setPlayer(this.exoPlayer);
+        } else {
+            this.mPlayerView.setPlayer(this.exoPlayer);
+        }
     }
 }
