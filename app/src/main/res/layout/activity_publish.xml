@@ -1,9 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.PublishActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.publish.PublishActivity">
+
+        <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/close_btn"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="@dimen/dp_45"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:padding="@dimen/dp_6"
+                android:src="@drawable/icon_close" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/publish_title"
+                android:textColor="@color/color_000"
+                android:textSize="@dimen/sp_16"
+                tools:layout_centerInParent="true"
+                tools:text="帖子发布页" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/publish_btn"
+                android:layout_width="70dp"
+                android:layout_height="@dimen/dp_30"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                android:backgroundTint="@color/color_theme"
+                android:gravity="center"
+                android:text="@string/publich_button"
+                android:textColor="@color/color_white"
+                app:cornerRadius="15dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/color_gray2" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/input_edit_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|top"
+            android:hint="@string/publish_edit_hint"
+            android:maxLines="1000"
+            android:minHeight="100dp"
+            android:padding="@dimen/dp_16"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+        <View
+            android:id="@+id/input_div_line"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/color_gray2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_edit_view" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_tag_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_25"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_10"
+            android:text="@string/publish_add_tag"
+            android:textColor="@color/color_theme"
+            android:textColorHint="@color/color_theme"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/dp_13"
+            app:icon="@drawable/tag_topic"
+            app:iconGravity="textEnd"
+            app:iconPadding="@dimen/dp_3"
+            app:iconTint="@color/color_theme"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_div_line"
+            app:strokeColor="@color/color_theme"
+            app:strokeWidth="@dimen/dp_1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_file_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/image_add"
+            app:backgroundTint="@color/color_theme"
+            app:icon="@drawable/post_add_video"
+            app:iconGravity="start"
+            app:iconPadding="@dimen/dp_6"
+            app:iconTint="@color/color_999"
+            app:iconTintMode="src_in"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_tag_btn" />
+
+        <FrameLayout
+            android:id="@+id/file_container_layout"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_tag_btn">
+
+            <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+                android:id="@+id/cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/video_icon"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_video_play_45" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/delete_file_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:paddingLeft="@dimen/dp_6"
+                app:srcCompat="@drawable/icon_close"
+                app:tint="@color/white" />
+
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
