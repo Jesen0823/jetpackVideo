@@ -75,6 +75,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
         // 第一条数据被加载
         @Override
         public void onItemAtFrontLoaded(@NonNull @NotNull T itemAtFront) {
+            // 新提交的PagedList中没有数据
             boundaryPageData.postValue(true);
         }
 

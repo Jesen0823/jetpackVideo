@@ -12,6 +12,7 @@ import com.jesen.cod.libcommon.JetAppGlobal;
 import org.jetbrains.annotations.NotNull;
 
 
+
 /*
 exportSchema = true会生成数据库的json文件，生成路径在gradle文件中指定:
 javaCompileOptions{
@@ -21,7 +22,7 @@ javaCompileOptions{
      }
 */
 
-@Database(entities = {Cache.class}, version = 1, exportSchema = true)
+@Database(entities = {Cache.class}, version = 1)
 //数据读取、存储时数据转换器,比如将写入时将Date转换成Long存储，读取时把Long转换Date返回
 //@TypeConverters(DateConverter.class)
 public abstract class CacheDatabase extends RoomDatabase {

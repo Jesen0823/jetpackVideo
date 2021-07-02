@@ -22,12 +22,14 @@ import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.ui.publish.PreviewActivity;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedCommentAdapter.ViewHolder> {
 
+    private static final String TAG = "FeedCommentAdapter";
     private Context mContext;
     private LayoutInflater mInflater;
 
@@ -35,6 +37,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
         super(new DiffUtil.ItemCallback<Comment>() {
             @Override
             public boolean areItemsTheSame(@NonNull Comment oldItem, @NonNull Comment newItem) {
+                Og.d(TAG + ", areItemsTheSame, comment newItem: id= " + newItem.id + ", content= " + newItem.commentCount);
                 return oldItem.id == newItem.id;
             }
 
@@ -57,6 +60,10 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
     @Override
     protected void onBindViewHolder2(ViewHolder holder, int position) {
         Comment comment = getItem(position);
+
+        Og.d(TAG + String.format(", onBindViewHolder2, position:\n %d, id: %d, content: %s",
+                position, comment.id, comment.commentCount));
+
         holder.bindData(comment);
 
         holder.mBinding.commentDelete.setOnClickListener(new View.OnClickListener() {
@@ -67,24 +74,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
                             @Override
                             public void onChanged(Boolean success) {
                                 if (success) {
-                                    MutableItemKeyedDataSource<Integer, Comment> dataSource
-                                            = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) getCurrentList().getDataSource()) {
-                                        @NonNull
-                                        @Override
-                                        public @NotNull Integer getKey(@NotNull Comment item) {
-                                            return item.id;
-                                        }
-                                    };
-
-                                    PagedList<Comment> currentList = getCurrentList();
-                                    for (Comment cmt : currentList) {
-                                        if (cmt != getItem(position)) {
-                                            dataSource.data.add(cmt);
-                                        }
-                                    }
-
-                                    PagedList<Comment> pagedList = dataSource.buildNewItemList(getCurrentList().getConfig());
-                                    submitList(pagedList);
+                                    deleteAndRefreshList(comment);
                                 }
                             }
                         });
@@ -99,6 +89,24 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
                         isVideo, null);
             }
         });
+    }
+
+    public void deleteAndRefreshList(Comment item) {
+        MutableItemKeyedDataSource<Integer, Comment> dataSource = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) getCurrentList().getDataSource()) {
+            @NonNull
+            @Override
+            public Integer getKey(@NonNull Comment item) {
+                return item.id;
+            }
+        };
+        PagedList<Comment> currentList = getCurrentList();
+        for (Comment comment : currentList) {
+            if (comment != item) {
+                dataSource.data.add(comment);
+            }
+        }
+        PagedList<Comment> pagedList = dataSource.buildNewItemList(getCurrentList().getConfig());
+        submitList(pagedList);
     }
 
     public void addAndRefreshList(Comment comment) {
@@ -128,19 +136,23 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
 
         public void bindData(Comment item) {
             mBinding.setComment(item);
-            mBinding.labelAuthor.setVisibility(UserManager.get().getUserId()
-                    == item.author.userId ? View.VISIBLE : View.GONE);
-            mBinding.commentDelete.setVisibility(UserManager.get().getUserId()
-                    == item.author.userId ? View.VISIBLE : View.GONE);
+            boolean self = item.author == null ? false : UserManager.get().getUserId() == item.author.userId;
+            mBinding.labelAuthor.setVisibility(self ? View.VISIBLE : View.GONE);
+            mBinding.commentDelete.setVisibility(self ? View.VISIBLE : View.GONE);
             if (!TextUtils.isEmpty(item.imageUrl)) {
+                mBinding.commentExt.setVisibility(View.VISIBLE);
                 mBinding.commentCover.setVisibility(View.VISIBLE);
                 mBinding.commentCover.bindData(item.imageUrl, item.width, item.height, 0,
                         PixUtils.dp2px(200), PixUtils.dp2px(200));
-
-                mBinding.videoIcon.setVisibility(TextUtils.isEmpty(item.videoUrl) ? View.GONE : View.VISIBLE);
+                if (!TextUtils.isEmpty(item.videoUrl)) {
+                    mBinding.videoIcon.setVisibility(View.VISIBLE);
+                } else {
+                    mBinding.videoIcon.setVisibility(View.GONE);
+                }
             } else {
                 mBinding.commentCover.setVisibility(View.GONE);
                 mBinding.videoIcon.setVisibility(View.GONE);
+                mBinding.commentExt.setVisibility(View.GONE);
             }
         }
     }

@@ -27,7 +27,7 @@ import java.util.List;
 public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
     private PageListPlayDetector playDetector;
-    private static String mFeedType;
+    private String mFeedType;
     private boolean shouldPause = true;
 
 
@@ -164,9 +164,9 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     }
 
     @Override
-    public void onDestroyView() {
-        Og.d("HomeFragment, onDestroyView, feedType:"+ mFeedType);
+    public void onDestroy() {
+        Og.d("HomeFragment, onDestroy, feedType:"+ mFeedType);
         PageListPlayManager.removePageListPlay(mFeedType);
-        super.onDestroyView();
+        super.onDestroy();
     }
 }

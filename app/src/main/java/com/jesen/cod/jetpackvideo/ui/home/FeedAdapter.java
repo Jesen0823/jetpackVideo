@@ -36,9 +36,9 @@ import org.jetbrains.annotations.NotNull;
 * */
 public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolder> {
 
-    private  String mCategory;
-    private LayoutInflater mLayoutInflater;
-    private Context mContext;
+    protected  String mCategory;
+    private final LayoutInflater mLayoutInflater;
+    protected Context mContext;
     private FeedObserver mFeedObserver;
 
     // DiffCallback 用来处理差分

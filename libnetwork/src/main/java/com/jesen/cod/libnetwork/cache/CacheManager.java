@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class CacheManager {
+
     public static <T> void save(String key, T body) {
         Cache cache = new Cache();
         cache.key = key;

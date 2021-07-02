@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.libcommon.utils.Og;
 
 public class FeedDetailActivity extends AppCompatActivity {
+    private static final String TAG = "FeedDetailActivity";
 
     private static final String KEY_FEED = "key_feed";
     protected static final String KEY_CATEGORY = "key_category";
@@ -18,8 +20,8 @@ public class FeedDetailActivity extends AppCompatActivity {
 
     public static void startFeedDetailActivity(Context context, Feed item, String category) {
         Intent intent = new Intent(context, FeedDetailActivity.class);
-        intent.putExtra(KEY_FEED,item);
-        intent.putExtra(KEY_CATEGORY,category);
+        intent.putExtra(KEY_FEED, item);
+        intent.putExtra(KEY_CATEGORY, category);
         context.startActivity(intent);
     }
 
@@ -27,15 +29,16 @@ public class FeedDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Feed feed = (Feed)getIntent().getSerializableExtra(KEY_FEED);
-        if (feed == null){
+        Feed feed = (Feed) getIntent().getSerializableExtra(KEY_FEED);
+        Og.d(TAG + ", onCreate, feed.id = " + feed.id);
+        if (feed == null) {
             finish();
             return;
         }
 
-        if (feed.itemType ==Feed.TYPE_IMAGE_TEXT){
+        if (feed.itemType == Feed.TYPE_IMAGE_TEXT) {
             viewHandler = new ImageViewHandler(this);
-        }else {
+        } else {
             viewHandler = new VideoViewHandler(this);
         }
 
@@ -43,9 +46,9 @@ public class FeedDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (viewHandler != null){
+        if (viewHandler != null) {
             viewHandler.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -53,7 +56,7 @@ public class FeedDetailActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (viewHandler != null){
+        if (viewHandler != null) {
             viewHandler.onPause();
         }
     }
@@ -62,16 +65,16 @@ public class FeedDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (viewHandler != null){
+        if (viewHandler != null) {
             viewHandler.onResume();
         }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (viewHandler != null){
+        if (viewHandler != null) {
             viewHandler.onBackPressed();
         }
+        super.onBackPressed();
     }
 }

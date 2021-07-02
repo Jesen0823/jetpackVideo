@@ -76,9 +76,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
                 public void onCacheSuccess(ApiResponse<List<Feed>> response) {
                     Og.d("HomeViewModel, loadData, onCacheSuccess.");
                     MutablePageKeyedDataSource dataSource = new MutablePageKeyedDataSource<Feed>();
-                    if(response.body != null) {
-                        dataSource.data.addAll(response.body);
-                    }
+                    dataSource.data.addAll(response.body);
 
                     PagedList pagedList = dataSource.buildNewPageList(config);
                     cacheLiveData.postValue(pagedList);

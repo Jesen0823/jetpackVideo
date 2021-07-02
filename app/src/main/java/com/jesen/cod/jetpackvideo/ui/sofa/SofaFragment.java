@@ -45,13 +45,13 @@ public class SofaFragment extends Fragment {
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentSofaBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         viewPager = binding.viewPager;
         tabLayout = binding.tabLayout;
 
@@ -96,7 +96,7 @@ public class SofaFragment extends Fragment {
         //是否需要重新刷野tabLayout的tab标签视情况而定,sofaFragment的tab数量一旦固定了是不会变的，传true/false 都可以
         mediator = new TabLayoutMediator(tabLayout, viewPager, true, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
-            public void onConfigureTab(@NonNull @NotNull TabLayout.Tab tab, int position) {
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setCustomView(makeTabView(position));
             }
         });

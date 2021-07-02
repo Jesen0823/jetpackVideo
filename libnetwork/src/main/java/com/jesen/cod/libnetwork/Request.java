@@ -27,9 +27,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public abstract class Request<T, R extends Request> implements Cloneable {
+
     protected String mUrl;
 
-    private HashMap<String, String> headers = new HashMap<>();
+    protected HashMap<String, String> headers = new HashMap<>();
     protected HashMap<String, Object> params = new HashMap<>();
 
     // 只访问本地缓存
@@ -43,7 +44,6 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     private String cacheKey;
 
     private Type mType;
-    private Class mClass;
     private int mCacheStrategy;
 
     @IntDef({CACHE_ONLY, CACHE_FIRST, NET_CACHE, NET_ONLY})
@@ -95,13 +95,13 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     }
 
     @SuppressLint("RestrictedApi")
-    public void execute(JsonCallback<T> callback) {
+    public void execute(final JsonCallback<T> callback) {
         if (mCacheStrategy != NET_ONLY) {
             ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
                     ApiResponse<T> response = readCache();
-                    if (callback != null) {
+                    if (callback != null && response.body != null) {
                         callback.onCacheSuccess(response);
                     }
                 }
@@ -158,9 +158,11 @@ public abstract class Request<T, R extends Request> implements Cloneable {
                     result.body = (T) convert.convert(content, argument);
                 } else if (mType != null) { // 同步，不带callback
                     result.body = (T) convert.convert(content, mType);
-                } else if (mClass != null) { // 同步，不带callback
+                }
+                /*else if (mClass != null) { // 同步，不带callback
                     result.body = (T) convert.convert(content, mClass);
-                } else {
+                } */
+                else {
                     Log.e("parseResponse", "无法解析");
                 }
 
@@ -206,7 +208,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
         if (mCacheStrategy == CACHE_ONLY) {
             return readCache();
         }
-        if(mCacheStrategy != CACHE_ONLY) {
+        if (mCacheStrategy != CACHE_ONLY) {
             ApiResponse<T> result = null;
             try {
                 Response response = getCall().execute();
@@ -229,7 +231,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     }
 
     public R responseType(Class clazz) {
-        mClass = clazz;
+        mType = clazz;
         return (R) this;
     }
 

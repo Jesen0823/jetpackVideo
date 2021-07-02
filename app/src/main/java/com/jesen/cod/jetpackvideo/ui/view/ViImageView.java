@@ -30,15 +30,15 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class ViImageView extends AppCompatImageView {
-    public ViImageView(@NonNull @NotNull Context context) {
+    public ViImageView(@NonNull Context context) {
         super(context);
     }
 
-    public ViImageView(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+    public ViImageView(@NonNull Context context, @Nullable  AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ViImageView(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
+    public ViImageView(@NonNull Context context, @Nullable  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -75,17 +75,17 @@ public class ViImageView extends AppCompatImageView {
         if (widthPx <= 0 || heightPx <= 0) {
             Glide.with(this).load(imageUrl).into(new Target<Drawable>() {
                 @Override
-                public void onLoadStarted(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
+                public void onLoadStarted(@Nullable  Drawable placeholder) {
 
                 }
 
                 @Override
-                public void onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable Drawable errorDrawable) {
+                public void onLoadFailed(@Nullable  Drawable errorDrawable) {
 
                 }
 
                 @Override
-                public void onResourceReady(@NonNull @NotNull Drawable resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Drawable> transition) {
+                public void onResourceReady(@NonNull Drawable resource, @Nullable  Transition<? super Drawable> transition) {
                     int height = resource.getIntrinsicHeight();
                     int width = resource.getIntrinsicWidth();
                     setSize(width, height, marginLeft, maxWidth, maxHeight);
@@ -94,23 +94,23 @@ public class ViImageView extends AppCompatImageView {
                 }
 
                 @Override
-                public void onLoadCleared(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
+                public void onLoadCleared(@Nullable  Drawable placeholder) {
                 }
 
                 @Override
-                public void getSize(@NonNull @NotNull SizeReadyCallback cb) {
+                public void getSize(@NonNull SizeReadyCallback cb) {
                 }
 
                 @Override
-                public void removeCallback(@NonNull @NotNull SizeReadyCallback cb) {
+                public void removeCallback(@NonNull SizeReadyCallback cb) {
                 }
 
                 @Override
-                public void setRequest(@Nullable @org.jetbrains.annotations.Nullable Request request) {
+                public void setRequest(@Nullable  Request request) {
                 }
 
                 @Nullable
-                @org.jetbrains.annotations.Nullable
+                
                 @Override
                 public Request getRequest() {
                     return null;
@@ -167,7 +167,7 @@ public class ViImageView extends AppCompatImageView {
                     }
 
                     @Override
-                    public void onLoadCleared(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
+                    public void onLoadCleared(@Nullable  Drawable placeholder) {
 
                     }
                 });

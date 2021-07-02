@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MutablePageKeyedDataSource<Value> extends PageKeyedDataSource<Integer, Value> {
 
-    public ArrayList<Value> data = new ArrayList<>();
+    public List<Value> data = new ArrayList<>();
 
     public PagedList<Value> buildNewPageList(PagedList.Config config){
         @SuppressLint("RestrictedApi")

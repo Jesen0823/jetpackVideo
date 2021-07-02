@@ -25,12 +25,14 @@ import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.libcommon.JetAppGlobal;
+import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.view.EmptyView;
 
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ViewHandler {
 
+    private static final String TAG = "ViewHandler";
     private final FeedDetailViewModel detailViewModel;
     protected FragmentActivity mActivity;
     protected Feed mFeed;
@@ -70,6 +72,10 @@ public abstract class ViewHandler {
         detailViewModel.getPagedListLiveData().observe(mActivity, new Observer<PagedList<Comment>>() {
             @Override
             public void onChanged(PagedList<Comment> comments) {
+
+                Og.d(TAG + String.format(", bindInitData, onChanged, first item of comments:\n id " +
+                        "= %d\n commentContent = %s", comments.get(0).id, comments.get(0).commentCount));
+
                 mListAdapter.submitList(comments);
 
                 handleEmpty(comments.size() > 0);
