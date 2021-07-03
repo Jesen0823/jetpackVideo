@@ -17,29 +17,29 @@
         <RelativeLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="@dimen/dp_48"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/close_btn"
-                android:layout_width="@dimen/dp_45"
-                android:layout_height="@dimen/dp_45"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dimen_10"
                 android:padding="@dimen/dp_6"
-                android:src="@drawable/icon_close" />
+                android:src="@drawable/icon_close"></ImageView>
+
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="@string/publish_title"
                 android:textColor="@color/color_000"
-                android:textSize="@dimen/sp_16"
-                tools:layout_centerInParent="true"
-                tools:text="帖子发布页" />
+                android:textSize="@dimen/sp_16"></TextView>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/publish_btn"
@@ -47,17 +47,18 @@
                 android:layout_height="@dimen/dp_30"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_16"
-                android:backgroundTint="@color/color_theme"
+                android:layout_marginRight="@dimen/dimen_16"
                 android:gravity="center"
                 android:text="@string/publich_button"
                 android:textColor="@color/color_white"
-                app:cornerRadius="15dp" />
+                app:backgroundTint="@color/color_theme"
+                app:cornerRadius="15dp"></com.google.android.material.button.MaterialButton>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/color_gray2" />
+                android:layout_alignParentBottom="true"
+                android:background="@color/color_gray2"></View>
         </RelativeLayout>
 
         <EditText
@@ -106,20 +107,52 @@
             app:strokeColor="@color/color_theme"
             app:strokeWidth="@dimen/dp_1" />
 
+        <!-- 三个按钮组成一个链条 分别是拍照，相册选取视频，相册选取图片 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_file_btn"
+            app:layout_constraintHorizontal_chainStyle="spread"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/image_add"
+            app:backgroundTint="@color/color_theme"
+            app:icon="@drawable/post_add_camera"
+            app:iconGravity="start"
+            app:iconPadding="@dimen/dp_10"
+            app:iconTint="@color/color_999"
+            app:iconTintMode="src_in"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_tag_btn"
+            app:layout_constraintRight_toLeftOf="@id/add_album_video_btn"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_album_video_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/image_add"
             app:backgroundTint="@color/color_theme"
             app:icon="@drawable/post_add_video"
             app:iconGravity="start"
-            app:iconPadding="@dimen/dp_6"
+            app:iconPadding="@dimen/dp_10"
             app:iconTint="@color/color_999"
             app:iconTintMode="src_in"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/add_file_btn"
+            app:layout_constraintRight_toLeftOf="@id/add_album_photo_btn"
+            app:layout_constraintTop_toBottomOf="@id/add_tag_btn" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_album_photo_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/image_add"
+            app:backgroundTint="@color/color_theme"
+            app:icon="@drawable/post_add_image"
+            app:iconGravity="start"
+            app:iconPadding="@dimen/dp_10"
+            app:iconTint="@color/color_999"
+            app:iconTintMode="src_atop"
+            app:layout_constraintLeft_toRightOf="@id/add_album_video_btn"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_tag_btn" />
 
         <FrameLayout

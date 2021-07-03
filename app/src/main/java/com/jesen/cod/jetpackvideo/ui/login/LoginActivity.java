@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.User;
+import com.jesen.cod.jetpackvideo.utils.ToastUtil;
 import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libnetwork.ApiResponse;
 import com.jesen.cod.libnetwork.ApiService;
@@ -136,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Og.d("LoginActivity, save, onSuccess, userId:"+response.body.userId);
                             UserManager.get().save(response.body);
                             finish();
+                            ToastUtil.show(getApplicationContext(),"登录成功！");
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override

@@ -50,7 +50,7 @@ public class TagBottomSheetDialog extends BottomSheetDialogFragment {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_tag_bottom_sheet_dialog,
                 null, false);
-        recyclerView = view.findViewById(R.id.record_view);
+        recyclerView = view.findViewById(R.id.tag_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTagAdapter = new TagsAdapter();
         recyclerView.setAdapter(mTagAdapter);

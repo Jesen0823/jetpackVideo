@@ -8,7 +8,8 @@
         path="/cameraX/" />
     <external-path
         name="DCIM"
-        path="/DCIM"
-        />
-
+        path="/DCIM" />
+    <external-path
+        name="Camera"
+        path="/DCIM/Camera/" />
 </paths>

@@ -2,6 +2,7 @@ package com.jesen.cod.jetpackvideo.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.arch.core.executor.ArchTaskExecutor;
@@ -27,11 +28,15 @@ public class ToastUtil {
 
     @SuppressLint("RestrictedApi")
     public static void showOnUI(Context context, String msg){
-        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                show(context,msg);
-            }
-        });
+        if (Looper.myLooper() == Looper.getMainLooper()){
+            show(context,msg);
+        }else {
+            ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    show(context,msg);
+                }
+            });
+        }
     }
 }
