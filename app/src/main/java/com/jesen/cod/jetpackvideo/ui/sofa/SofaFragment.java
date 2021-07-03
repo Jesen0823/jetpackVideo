@@ -35,7 +35,7 @@ import java.util.List;
 public class SofaFragment extends Fragment {
 
     private FragmentSofaBinding binding;
-    private ViewPager2 viewPager;
+    public ViewPager2 viewPager;
     private TabLayout tabLayout;
     private SofaTab tabConfig;
     private List<SofaTab.Tabs> tabs;

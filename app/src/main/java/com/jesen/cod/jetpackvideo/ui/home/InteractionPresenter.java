@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer;
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.model.Comment;
 import com.jesen.cod.jetpackvideo.model.Feed;
+import com.jesen.cod.jetpackvideo.model.TagList;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.ShareDialog;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
@@ -46,6 +47,7 @@ public class InteractionPresenter {
     private static final String URL_SHARE = "/ugc/increaseShareCount";
     private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
     private static final String URL_FEED_FAVORITE = "/ugc/toggleFavorite";
+    private static final String URL_TAG_LIKE = "/tag/toggleTagFollow";
 
     private static Uri shareImgUri;
 
@@ -387,6 +389,38 @@ public class InteractionPresenter {
                             boolean result = response.body.getBooleanValue("result");
                             ((MutableLiveData) liveData).postValue(result);
                             showToast("评论删除成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    public static void toggleTagLike(LifecycleOwner owner, TagList tagList){
+        if (!isLogin(owner, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                toggleTagLikeInternal(tagList);
+            }
+        }));
+        else {
+            toggleTagLikeInternal(tagList);
+        }
+    }
+
+    private static void toggleTagLikeInternal(TagList tagList) {
+        ApiService.get(URL_TAG_LIKE)
+                .addParams("tagId", tagList.tagId)
+                .addParams("userId", UserManager.get().getUserId())
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            Boolean follow = response.body.getBoolean("hasFollow");
+                            tagList.setHasFollow(follow);
                         }
                     }
 

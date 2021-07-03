@@ -1,5 +1,9 @@
 package com.jesen.cod.jetpackvideo.utils;
 
+import androidx.annotation.StringRes;
+
+import com.jesen.cod.libcommon.JetAppGlobal;
+
 public class StringUtil {
 
     public static String subBeforeLastString(String src, String part) {
@@ -15,4 +19,11 @@ public class StringUtil {
         return "";
     }
 
+    public static String getStringRes(@StringRes int resId, int num){
+        return String.format(JetAppGlobal.getApplication().getResources().getString(resId),num);
+    }
+
+    public static String getString(String resStr, int num){
+        return String.format(resStr,num);
+    }
 }

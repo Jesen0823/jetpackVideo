@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="tagList"
+            type="com.jesen.cod.jetpackvideo.model.TagList" />
+        <import type="android.text.Html" />
+
+        <import type="com.jesen.cod.jetpackvideo.utils.StringUtil" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            android:id="@+id/tag_avatar"
+            image_url="@{tagList.icon}"
+            radius="@{8}"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tag_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="@{tagList.title}"
+            android:textColor="@color/color_000"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@+id/tag_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tag_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="64dp"
+            android:text="@{Html.fromHtml(StringUtil.getString(@string/tag_list_item_hot_feed,tagList.feedNum),1)}"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@+id/tag_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/tag_title" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/follow_btn"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:text="@{tagList.hasFollow?@string/tag_follow:@string/tag_unfollow}"
+            android:textSize="13sp"
+            app:backgroundTint="@color/color_theme"
+            app:cornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

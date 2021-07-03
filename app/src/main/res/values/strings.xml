@@ -37,11 +37,11 @@
     <string name="file_upload_original_message">原始文件上传失败</string>
     <string name="feed_publisj_success">帖子发布成功,去沙发页看看吧</string>
     <string name="feed_publish_ing">正在发布...</string>
-    <string name="tag_list_item_hot_feed">条热门内容</string>
+    <string name="tag_list_item_hot_feed">收录<font color='blue'>%1$s</font>, <font color="#FF0000">条热门内容 </font></string>
     <string name="tag_follow">已关注</string>
     <string name="tag_unfollow">关注</string>
     <string name="tag_list_no_follow">还没关注任何数据,去推荐页面看看吧~</string>
-    <string name="tag_list_no_follow_button">看看推荐</string>
+    <string name="tag_list_no_follow_button">去推荐区</string>
     <string name="like_count">\n获赞</string>
     <string name="fans_count">\n粉丝</string>
     <string name="follow_count">\n关注</string>
