@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="tagList"
+            type="com.jesen.cod.jetpackvideo.model.TagList" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
+    </data>
+
+    <com.jesen.cod.jetpackvideo.ui.view.WindowInsertsFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.find.TagDetailFeedListActivity">
+
+        <include
+            android:id="@+id/refresh_view_layout"
+            layout="@layout/layout_refresh_view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/back_left_arrow" />
+
+            <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+                android:id="@+id/tag_logo"
+                image_url="@{tagList.icon}"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginTop="18dp"
+                app:layout_constraintStart_toEndOf="@+id/back_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:radius="@{8}"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tag_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginTop="17dp"
+                android:text="@{tagList.title}"
+                android:textColor="@color/color_000"
+                android:textSize="13sp"
+                app:layout_constraintStart_toEndOf="@+id/tag_logo"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="夏日进行时"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/follow_tag_btn"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="28dp"
+                android:text="@{tagList.hasFollow?@string/tag_follow:@string/tag_unfollow}"
+                android:textSize="13sp"
+                android:onClick="@{()->InteractionPresenter.toggleTagLike(owner, tagList)}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tag_title"
+                app:backgroundTint="@color/color_theme"
+                app:cornerRadius="8dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginHorizontal="@dimen/dp_5"
+                android:background="@color/color_gray2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.jesen.cod.jetpackvideo.ui.view.WindowInsertsFrameLayout>
+</layout>

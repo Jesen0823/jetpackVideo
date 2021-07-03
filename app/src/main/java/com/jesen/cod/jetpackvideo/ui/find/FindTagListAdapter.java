@@ -62,6 +62,12 @@ public class FindTagListAdapter extends AbsPagedListAdapter<TagList, FindTagList
                 InteractionPresenter.toggleTagLike((LifecycleOwner) mContext, item);
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TagDetailFeedListActivity.startActivity(mContext, item);
+            }
+        });
     }
 
 

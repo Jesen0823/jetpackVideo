@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginStart="@dimen/dp_16"
-            android:text="@{Html.fromHtml(StringUtil.getString(@string/tag_list_item_hot_feed1,tagList.feedNum),1)}"
+            android:text="@{Html.fromHtml(StringUtil.getString(@string/tag_list_item_hot_feed,tagList.feedNum),1)}"
             android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@+id/tag_avatar"
             app:layout_constraintTop_toBottomOf="@+id/tag_title" />

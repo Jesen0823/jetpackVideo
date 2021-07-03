@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="tagList"
+            type="com.jesen.cod.jetpackvideo.model.TagList" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter"/>
+        <import type="android.text.TextUtils"/>
+        <import type="com.jesen.cod.jetpackvideo.utils.StringConvert"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            android:id="@+id/header_bg"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:image_url="@{tagList.background}"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:text="@{tagList.title}"
+            android:textColor="@color/color_000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_bg"
+            tools:text="西瓜镇可乐"/>
+
+        <TextView
+            android:id="@+id/header_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_bg"
+            android:textColor="@color/color_theme"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:layout_marginRight="@dimen/dimen_16"
+            android:textSize="13sp"
+            android:onClick="@{()->InteractionPresenter.toggleTagLike(owner,tagList)}"
+            android:text="@{tagList.hasFollow?@string/tag_follow:@string/tag_unfollow}"
+            tools:text="关注"/>
+
+        <TextView
+            android:id="@+id/header_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:textColor="@color/color_999"
+            android:textSize="13sp"
+            android:text="@{tagList.intro}"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/header_title"
+            tools:text="赶回家kill看看"/>
+        <TextView
+            android:id="@+id/header_tag_watcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:textColor="@color/color_999"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_intro"
+            android:text="@{StringConvert.convertTagFeedList(tagList.enterNum)}"
+            android:visibility="@{tagList.enterNum>0?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/header_intro"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10"
+            android:background="@color/color_gray2"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_tag_watcher"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
