@@ -17,6 +17,7 @@ import com.jesen.cod.jetpackvideo.model.TagList;
 import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.utils.StringUtil;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
+import com.jesen.cod.libcommon.utils.Og;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,16 +49,17 @@ public class FindTagListAdapter extends AbsPagedListAdapter<TagList, FindTagList
     @Override
     protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
         LayoutFindTagListItemBinding itemBinding = LayoutFindTagListItemBinding.inflate(mLayoutInflater, parent, false);
-        return new ViewHolder(itemBinding.getRoot(),itemBinding);
+        return new ViewHolder(itemBinding.getRoot(), itemBinding);
     }
 
     @Override
     protected void onBindViewHolder2(ViewHolder holder, int position) {
-        holder.bindData(getItem(position));
+        final TagList item = getItem(position);
+        holder.bindData(item);
         holder.mItemBinding.followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InteractionPresenter.toggleTagLike((LifecycleOwner) mContext,getItem(position));
+                InteractionPresenter.toggleTagLike((LifecycleOwner) mContext, item);
             }
         });
     }
@@ -72,7 +74,8 @@ public class FindTagListAdapter extends AbsPagedListAdapter<TagList, FindTagList
 
         }
 
-        public void bindData(TagList item){
+        public void bindData(TagList item) {
+            Og.d(TAG + ", bindData, item, title:" + item.title);
             mItemBinding.setTagList(item);
         }
     }

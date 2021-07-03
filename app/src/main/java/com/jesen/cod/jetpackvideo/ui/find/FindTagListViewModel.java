@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FindTagListViewModel extends AbsViewModel<TagList> {
 
-    private static final String URL_HOT_FEED_LIST = "/feeds/queryHotFeedsList";
+    private static final String URL_QUERY_TAG_LIST = "/tag/queryTagList";
     // tab类型，“关注” or "推荐"
     private String mTagType;
     private int offSet;
@@ -50,20 +50,20 @@ public class FindTagListViewModel extends AbsViewModel<TagList> {
         mTagType = tagType;
     }
 
-    public MutableLiveData getSwitchTabLiveData(){
+    public MutableLiveData getSwitchTabLiveData() {
         return switchTabLiveData;
     }
 
     @SuppressLint("RestrictedApi")
     public void loadData(long tagId, ItemKeyedDataSource.LoadCallback callback) {
-        if (tagId < 0 || loadAfter.get()) { // 正在分页当中
+        if (tagId <= 0 || loadAfter.get()) { // 正在分页当中
             callback.onResult(Collections.emptyList());
             return;
         }
         ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                ((FindTagListViewModel.DataSource)getDataSource()).loadData(tagId, callback);
+                ((FindTagListViewModel.DataSource) getDataSource()).loadData(tagId, callback);
             }
         });
 
@@ -98,10 +98,10 @@ public class FindTagListViewModel extends AbsViewModel<TagList> {
         }
 
         private void loadData(Long requestKey, LoadCallback<TagList> callback) {
-            if (requestKey >0){ // 分页
+            if (requestKey > 0) { // 分页
                 loadAfter.set(true);
             }
-            ApiResponse<List<TagList>> response = ApiService.get(URL_HOT_FEED_LIST)
+            ApiResponse<List<TagList>> response = ApiService.get(URL_QUERY_TAG_LIST)
                     .addParams("userId", UserManager.get().getUserId())
                     .addParams("tagId", requestKey)
                     .addParams("tagType", mTagType)
@@ -119,7 +119,7 @@ public class FindTagListViewModel extends AbsViewModel<TagList> {
                 // 累计标记位
                 offSet += result.size();
                 // 分页结果传递出去以便加载动画结束
-                ((MutableLiveData) getBoundaryPageData()).postValue(result);
+                ((MutableLiveData) getBoundaryPageData()).postValue(result.size() > 0);
             } else { // 初始请求或下拉刷新
                 offSet = result.size();
             }

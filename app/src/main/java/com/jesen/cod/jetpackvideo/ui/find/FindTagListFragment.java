@@ -37,7 +37,7 @@ public class FindTagListFragment extends AbsListFragment<TagList, FindTagListVie
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (TextUtils.equals(mTagType, "onlyFollow")){
+        if (TextUtils.equals(mTagType, "onlyFollow")) {
             mEmptyView.setTitle(getString(R.string.tag_list_no_follow));
             mEmptyView.setActionBtn(getString(R.string.tag_list_no_follow_button), new View.OnClickListener() {
                 @Override
@@ -47,6 +47,7 @@ public class FindTagListFragment extends AbsListFragment<TagList, FindTagListVie
                 }
             });
         }
+        mRecyclerView.removeItemDecorationAt(0);
         mViewModel.setTagType(mTagType);
     }
 
@@ -65,21 +66,23 @@ public class FindTagListFragment extends AbsListFragment<TagList, FindTagListVie
 
             @Override
             public void onResult(@NonNull List data) {
-                MutableItemKeyedDataSource<Long, TagList> mutableItemKeyedDataSource 
-                        = new MutableItemKeyedDataSource<Long, TagList>((ItemKeyedDataSource) mViewModel.getDataSource()) {
+                if (data != null && data.size() > 0) {
+                    MutableItemKeyedDataSource<Long, TagList> mutableItemKeyedDataSource
+                            = new MutableItemKeyedDataSource<Long, TagList>((ItemKeyedDataSource) mViewModel.getDataSource()) {
 
-                    @Override
-                    public @NotNull Long getKey(@NonNull TagList item) {
-                        return item.tagId;
-                    }
-                };
-                
-                // 传入当前列表和本次请求得到的列表,进行差分异
-                mutableItemKeyedDataSource.data.addAll(currentList);
-                mutableItemKeyedDataSource.data.addAll(data);
-                PagedList<TagList> newTagLists = mutableItemKeyedDataSource.buildNewItemList(currentList.getConfig());
-                if (data.size()>0){
+                        @Override
+                        public @NotNull Long getKey(@NonNull TagList item) {
+                            return item.tagId;
+                        }
+                    };
+
+                    // 传入当前列表和本次请求得到的列表,进行差分异
+                    mutableItemKeyedDataSource.data.addAll(currentList);
+                    mutableItemKeyedDataSource.data.addAll(data);
+                    PagedList<TagList> newTagLists = mutableItemKeyedDataSource.buildNewItemList(currentList.getConfig());
                     submitList(newTagLists);
+                } else {
+                    finishRefresh(false);
                 }
             }
         });
