@@ -24,7 +24,7 @@ public class AppConfig {
 
     private static BottomBar mBottomBar;
 
-    private static SofaTab sSofaTab;
+    private static SofaTab sSofaTab, mFindTabConfig;
 
 
     public static BottomBar getBottomBar() {
@@ -86,5 +86,19 @@ public class AppConfig {
             });
         }
         return sSofaTab;
+    }
+
+    public static SofaTab getFindTabConfig() {
+        if (mFindTabConfig == null) {
+            String content = parseFile("find_tabs_config.json");
+            mFindTabConfig = JSON.parseObject(content, SofaTab.class);
+            Collections.sort(mFindTabConfig.tabs, new Comparator<SofaTab.Tabs>() {
+                @Override
+                public int compare(SofaTab.Tabs tab1, SofaTab.Tabs tab2) {
+                    return tab1.index < tab2.index ? -1 : 1;
+                }
+            });
+        }
+        return mFindTabConfig;
     }
 }
