@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.jesen.cod.libcommon.utils.PixUtils;
+import com.jesen.cod.libcommon.view.ViewHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +41,7 @@ public class ViImageView extends AppCompatImageView {
 
     public ViImageView(@NonNull Context context, @Nullable  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ViewHelper.setViewOutline(this, attrs,defStyleAttr,0);
     }
 
     public void setImageUrl(String imageUrl) {

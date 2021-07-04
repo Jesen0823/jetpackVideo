@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="com.jesen.cod.jetpackvideo.model.User" />
+        <variable
+            name="expand"
+            type="Boolean" />
+        <import type="android.view.View"/>
+        <import type="com.jesen.cod.jetpackvideo.utils.StringConvert"/>
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.mine.UserPersonalActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:background="@color/color_gray"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/list_divider"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:fitsSystemWindows="true"
+            app:statusBarForeground="@color/white"
+            android:showDividers="middle|end">
+
+            <!-- scroll：被它包裹的内容会随手指滑动 -->
+            <!-- exitUntilCollapsed:滑动到最小高度就不动了 -->
+            <!-- statusBarScrim:状态栏遮盖色 -->
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:background="@color/color_white"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp_48"
+                app:statusBarScrim="@color/color_white">
+
+                <!-- 展开状态下的布局 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginRight="@dimen/dp_16"
+                    app:layout_scrollFlags="scroll">
+
+                    <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+                        android:id="@+id/user_avatar_large"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        image_url="@{user.avatar}"
+                        app:isCircle="@{true}"
+                        app:radius="@{0}"
+                        tools:src="@drawable/wode_pressed"/>
+
+                    <!-- layout_constraintHorizontal_weight 占用剩余空间 -->
+                    <LinearLayout
+                        android:id="@+id/personal_info"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="1"
+                        android:layout_height="match_parent"
+                        app:layout_constraintLeft_toRightOf="@id/user_avatar_large"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/like_count"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.3"
+                            android:text="@{StringConvert.convertSpannable(user.likeCount,@string/like_count)}"
+                            android:textColor="@color/color_666"
+                            tools:text="100\n获赞" />
+
+                        <TextView
+                            android:id="@+id/fans_count"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.3"
+                            android:text="@{StringConvert.convertSpannable(user.followerCount,@string/fans_count)}"
+                            android:textColor="@color/color_666"
+                            tools:text="100\n粉丝" />
+
+                        <TextView
+                            android:id="@+id/follow_count"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.3"
+                            android:text="@{StringConvert.convertSpannable(user.followCount,@string/follow_count)}"
+                            android:textColor="@color/color_666"
+                            tools:text="100\n关注" />
+
+                        <TextView
+                            android:id="@+id/score_count"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.3"
+                            android:text="@{StringConvert.convertSpannable(user.score,@string/score_count)}"
+                            android:textColor="@color/color_666"
+                            tools:text="100\n积分" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@id/user_avatar_large"
+                        app:layout_constraintTop_toBottomOf="@id/personal_info"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="@color/color_999"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:text="@{user.description}"
+                        tools:text="挂机阿迪力杂志主编，曾获得跨行业沃尔夫金奖"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- 折叠起来的固定不动顶部布局-->
+                <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_48"
+                    android:background="@color/color_white"
+                    app:layout_collapseMode="pin">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/top_user_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/back_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:src="@drawable/back_left_arrow"
+                            android:padding="@dimen/dp_10"/>
+                        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+                            android:id="@+id/top_user_avatar"
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
+                            app:layout_constraintLeft_toRightOf="@id/back_btn"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            app:image_url="@{user.avatar}"
+                            app:isCircle="@{true}"
+                            tools:src="@drawable/qq_logo"/>
+                        <TextView
+                            android:id="@+id/top_user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toRightOf="@id/top_user_avatar"
+                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:textSize="@dimen/sp_12"
+                            android:textColor="@color/color_000"
+                            android:textStyle="bold"
+                            android:text="@{user.name}"
+                            tools:text="李云龙"/>
+                        <TextView
+                            android:id="@+id/top_user_name_large"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_000"
+                            android:textSize="18sp"
+                            android:textColorHint="@color/color_000"
+                            android:textStyle="bold"
+                            android:text="@{user.name}"
+                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            tools:text="赵刚"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- 页面导航栏 -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            tools:background="@color/purple_700">
+
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:background="@color/purple_200">
+
+        </androidx.viewpager2.widget.ViewPager2>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

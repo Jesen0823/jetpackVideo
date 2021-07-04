@@ -48,6 +48,7 @@ public class InteractionPresenter {
     private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
     private static final String URL_FEED_FAVORITE = "/ugc/toggleFavorite";
     private static final String URL_TAG_LIKE = "/tag/toggleTagFollow";
+    private static final String URL_DELETE_FEED= "/feeds/deleteFeed/";
 
     private static Uri shareImgUri;
 
@@ -347,7 +348,7 @@ public class InteractionPresenter {
     }
 
     private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
-        ApiService.get("/feeds/deleteFeed")
+        ApiService.get(URL_DELETE_FEED)
                 .addParams("itemId", itemId)
                 .execute(new JsonCallback<com.alibaba.fastjson.JSONObject>() {
                     @Override
@@ -399,6 +400,9 @@ public class InteractionPresenter {
                 });
     }
 
+    /*
+    * 关注一个TAG
+    * */
     public static void toggleTagLike(LifecycleOwner owner, TagList tagList){
         if (!isLogin(owner, new Observer<User>() {
             @Override
@@ -430,4 +434,5 @@ public class InteractionPresenter {
                     }
                 });
     }
+
 }

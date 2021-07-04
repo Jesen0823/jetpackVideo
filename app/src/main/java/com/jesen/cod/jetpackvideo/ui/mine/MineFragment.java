@@ -2,6 +2,7 @@ package com.jesen.cod.jetpackvideo.ui.mine;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -67,6 +68,13 @@ public class MineFragment extends Fragment {
                         .setNegativeButton(getString(R.string.fragment_my_logout_cancel), null)
                         .create();
                 logoutDialog.show();
+            }
+        });
+
+        mBinding.avatarUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserPersonalActivity.startActivity(getContext(),user);
             }
         });
     }

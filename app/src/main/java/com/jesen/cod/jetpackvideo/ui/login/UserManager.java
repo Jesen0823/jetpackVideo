@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.arch.core.executor.ArchTaskExecutor;
@@ -38,6 +39,9 @@ public class UserManager {
     }
 
     public void save(User user){
+        if (TextUtils.isEmpty(user.description)){
+            user.description = "用户描述是空白，可能是用户没有设置";
+        }
         mUser = user;
         Og.d("UserManager, save, mUser:"+mUser.userId+", name: "+ mUser.name);
 
@@ -61,6 +65,9 @@ public class UserManager {
     }
 
     public User getUser() {
+        if (mUser !=null && TextUtils.isEmpty(mUser.description)){ // 防止UI空白
+            mUser.description = "用户描述是空白，可能是用户没有设置";
+        }
         return isLogin() ? mUser : null;
     }
 
