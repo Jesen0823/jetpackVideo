@@ -1,14 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.mine.MineFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="user"
+            type="com.jesen.cod.jetpackvideo.model.User" />
+
+        <import type="com.jesen.cod.jetpackvideo.utils.StringConvert" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".ui.mine.MineFragment">
 
-</FrameLayout>
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            image_url="@{user.avatar}"
+            radius="@{50}"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/logout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:fitsSystemWindows="true"
+            android:src="@drawable/ic_power_30"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            android:id="@+id/avatar_user"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="75dp"
+            app:image_url="@{user.avatar}"
+            app:isCircle="@{true}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="75dp"
+            android:text="@{user.name}"
+            android:textColor="@color/color_000"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toRightOf="@id/avatar_user"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="大哥哥" />
+
+        <TextView
+            android:id="@+id/user_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_6"
+            android:text="@{user.description}"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintLeft_toRightOf="@id/avatar_user"
+            app:layout_constraintTop_toBottomOf="@id/name_user"
+            tools:text="中国馆钉钉打卡在学校搜索大使" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/go_detail"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="@dimen/dp_10"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_goto"
+            app:tint="@color/color_white" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_overlap"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="180dp"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="@color/color_white"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/like_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConvert.convertSpannable(user.likeCount,@string/like_count)}"
+                    android:textColor="@color/color_666"
+                    tools:text="获赞" />
+
+                <TextView
+                    android:id="@+id/fans_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConvert.convertSpannable(user.followerCount,@string/fans_count)}"
+                    android:textColor="@color/color_666"
+                    tools:text="粉丝" />
+
+                <TextView
+                    android:id="@+id/follow_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConvert.convertSpannable(user.followCount,@string/follow_count)}"
+                    android:textColor="@color/color_666"
+                    tools:text="关注" />
+
+                <TextView
+                    android:id="@+id/score_count"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConvert.convertSpannable(user.score,@string/score_count)}"
+                    android:textColor="@color/color_666"
+                    tools:text="积分" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="@color/white"
+            android:elevation="3dp"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_overlap">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/user_feed"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/myspace_live_reserve"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_feed"
+                    android:textColor="@color/color_333"
+                    android:textSize="13sp"
+                    tools:text="话题" />
+
+                <TextView
+                    android:id="@+id/user_comment"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/myspace_comment"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_comment"
+                    android:textColor="@color/color_333"
+                    android:textSize="13sp"
+                    tools:text="评论" />
+
+                <TextView
+                    android:id="@+id/user_favorite"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/myspace_collect"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_favorite"
+                    android:textColor="@color/color_333"
+                    android:textSize="13sp"
+                    tools:text="收藏" />
+
+                <TextView
+                    android:id="@+id/user_history"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/myspace_play_history"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="@string/fragment_my_history"
+                    android:textColor="@color/color_333"
+                    android:textSize="13sp"
+                    tools:text="历史" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

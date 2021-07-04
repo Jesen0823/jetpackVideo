@@ -78,6 +78,7 @@ public class UserManager {
                 .execute(new JsonCallback<User>() {
                     @Override
                     public void onSuccess(ApiResponse<User> response) {
+                        // 更新本地缓存
                         save(response.body);
                         liveData.postValue(getUser());
                     }
