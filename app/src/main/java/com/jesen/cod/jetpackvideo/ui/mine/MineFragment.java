@@ -78,6 +78,23 @@ public class MineFragment extends Fragment {
                 UserPersonalActivity.startActivity(getContext(), PersonalTabType.TAB_ALL.getName());
             }
         });
+
+        mBinding.goDetail.setOnClickListener(v -> {
+            UserPersonalActivity.startActivity(getContext(), PersonalTabType.TAB_ALL.getName());
+        });
+        mBinding.userFeed.setOnClickListener(v -> {
+            UserPersonalActivity.startActivity(getContext(), PersonalTabType.TAB_ALL.getName());
+        });
+        mBinding.userComment.setOnClickListener(v -> {
+            UserPersonalActivity.startActivity(getContext(), PersonalTabType.TAB_COMMENT.getName());
+        });
+        mBinding.userFavorite.setOnClickListener(v -> {
+            UserFavoriteHistoryActivity.startActivity(getContext(), UserFavoriteHistoryActivity.BEHAVIOR_FAVORITE);
+        });
+        mBinding.userHistory.setOnClickListener(v -> {
+            UserFavoriteHistoryActivity.startActivity(getContext(), UserFavoriteHistoryActivity.BEHAVIOR_HISTORY);
+        });
+
     }
 
     @Override

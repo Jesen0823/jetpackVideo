@@ -82,7 +82,7 @@ public class ApiService {
     }
 
     @NotNull
-    @Contract("_ -> new")
+   // @Contract("_ -> new")
     public static <T> GetRequest<T> get(String url) {
         return new GetRequest<>(mBaseUrl + url);
     }

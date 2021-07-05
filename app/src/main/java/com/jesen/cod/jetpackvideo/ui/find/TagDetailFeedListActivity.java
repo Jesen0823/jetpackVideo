@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -151,20 +152,31 @@ public class TagDetailFeedListActivity extends AppCompatActivity implements View
         headerBinding.setTagList(mTagList);
         headerBinding.setLifecycleOwner(this);
         mAdapter.addHeaderView(headerBinding.getRoot());
+        int barMaxHeight = PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT);
 
-        Og.d(TAG+", addHeaderView, toBar height: "+ PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT)+"px");
+        Og.d(TAG+", addHeaderView, toBar height: "+ barMaxHeight +"px");
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /*
+            * dy < 0,下拉； dy > 0,上拉
+            * */
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 totalScrollY += dy;
-                boolean overHeight = totalScrollY > PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT);
-                Og.d(TAG+", addHeaderView, toBar totalScrollY: "+ totalScrollY+"px");
-                Og.d(TAG+", addHeaderView, current dx: "+ dx+"px");
+                boolean overHeight = totalScrollY > barMaxHeight;
+                Og.d(TAG+", addHeaderView, toBar totalScrollY: "+ totalScrollY+" px");
+                Og.d(TAG+", addHeaderView, current dy: "+ dy+" px");
                 mBinding.topBarGroup.setVisibility(overHeight?View.VISIBLE:View.GONE);
                 mBinding.backBtn.setColorFilter(overHeight?Color.BLACK:Color.WHITE);
                 mBinding.topBar.setBackgroundColor(overHeight ? Color.WHITE : Color.TRANSPARENT);
                 mBinding.topLine.setVisibility(overHeight ? View.VISIBLE : View.INVISIBLE);
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Og.d(TAG+", addHeaderView, onScrollStateChanged newState: "+ newState);
+
             }
         });
     }

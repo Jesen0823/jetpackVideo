@@ -258,7 +258,9 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     public boolean onTouchEvent(MotionEvent event) {
         //点击该区域时 我们诸主动让视频控制器显示出来
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
-        pageListPlay.mControllerView.show();
+        if (pageListPlay.mControllerView != null) {
+            pageListPlay.mControllerView.show();
+        }
         return true;
     }
 }
