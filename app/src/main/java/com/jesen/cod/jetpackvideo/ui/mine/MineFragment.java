@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.FragmentMineBinding;
+import com.jesen.cod.jetpackvideo.model.PersonalTabType;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.libcommon.utils.StatusBarUtil;
@@ -40,7 +41,7 @@ public class MineFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         User user = UserManager.get().getUser();
         mBinding.setUser(user);
@@ -74,13 +75,13 @@ public class MineFragment extends Fragment {
         mBinding.avatarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserPersonalActivity.startActivity(getContext(),user);
+                UserPersonalActivity.startActivity(getContext(), PersonalTabType.TAB_ALL.getName());
             }
         });
     }
 
     @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         StatusBarUtil.lightStatusBar(getActivity(), false);
         super.onCreate(savedInstanceState);
     }

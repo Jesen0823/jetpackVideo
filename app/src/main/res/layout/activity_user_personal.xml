@@ -4,14 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="user"
             type="com.jesen.cod.jetpackvideo.model.User" />
+
         <variable
             name="expand"
             type="Boolean" />
-        <import type="android.view.View"/>
-        <import type="com.jesen.cod.jetpackvideo.utils.StringConvert"/>
+
+        <import type="android.view.View" />
+
+        <import type="com.jesen.cod.jetpackvideo.utils.StringConvert" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -22,13 +26,13 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:background="@color/color_gray"
             android:layout_height="wrap_content"
+            android:background="@color/purple_200"
             android:divider="@drawable/list_divider"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             android:fitsSystemWindows="true"
-            app:statusBarForeground="@color/white"
-            android:showDividers="middle|end">
+            android:showDividers="middle|end"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:statusBarForeground="@color/white">
 
             <!-- scroll：被它包裹的内容会随手指滑动 -->
             <!-- exitUntilCollapsed:滑动到最小高度就不动了 -->
@@ -36,44 +40,43 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:background="@color/color_white"
                 android:layout_height="wrap_content"
+                android:background="@color/color_white"
                 android:minHeight="@dimen/dp_48"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:statusBarScrim="@color/color_white">
 
                 <!-- 展开状态下的布局 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="80dp"
-                    android:layout_marginBottom="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginTop="80dp"
                     android:layout_marginRight="@dimen/dp_16"
-                    app:layout_scrollFlags="scroll">
+                    android:layout_marginBottom="@dimen/dp_10">
 
                     <com.jesen.cod.jetpackvideo.ui.view.ViImageView
                         android:id="@+id/user_avatar_large"
+                        image_url="@{user.avatar}"
                         android:layout_width="90dp"
                         android:layout_height="90dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        image_url="@{user.avatar}"
                         app:isCircle="@{true}"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:radius="@{0}"
-                        tools:src="@drawable/wode_pressed"/>
+                        tools:src="@drawable/wode_pressed" />
 
                     <!-- layout_constraintHorizontal_weight 占用剩余空间 -->
                     <LinearLayout
                         android:id="@+id/personal_info"
                         android:layout_width="0dp"
-                        app:layout_constraintHorizontal_weight="1"
                         android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintLeft_toRightOf="@id/user_avatar_large"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:id="@+id/like_count"
@@ -124,14 +127,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="@{user.description}"
+                        android:textColor="@color/color_999"
+                        android:textSize="@dimen/sp_12"
                         app:layout_constraintLeft_toRightOf="@id/user_avatar_large"
                         app:layout_constraintTop_toBottomOf="@id/personal_info"
-                        android:textSize="@dimen/sp_12"
-                        android:textColor="@color/color_999"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:text="@{user.description}"
-                        tools:text="挂机阿迪力杂志主编，曾获得跨行业沃尔夫金奖"/>
+                        tools:text="挂机阿迪力杂志主编，曾获得跨行业沃尔夫金奖" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -139,7 +142,7 @@
                 <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_48"
-                    android:background="@color/color_white"
+                    android:background="@{expand?@color/color_white:@color/color_blue_p}"
                     app:layout_collapseMode="pin">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -151,68 +154,78 @@
                             android:id="@+id/back_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:padding="@dimen/dp_10"
                             android:src="@drawable/back_left_arrow"
-                            android:padding="@dimen/dp_10"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <com.jesen.cod.jetpackvideo.ui.view.ViImageView
                             android:id="@+id/top_user_avatar"
                             android:layout_width="@dimen/dp_30"
                             android:layout_height="@dimen/dp_30"
-                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
-                            app:layout_constraintLeft_toRightOf="@id/back_btn"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             android:layout_marginLeft="@dimen/dp_10"
+                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
                             app:image_url="@{user.avatar}"
                             app:isCircle="@{true}"
-                            tools:src="@drawable/qq_logo"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/back_btn"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:src="@drawable/qq_logo" />
+
                         <TextView
                             android:id="@+id/top_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintLeft_toRightOf="@id/top_user_avatar"
-                            android:visibility="@{expand?View.VISIBLE:View.GONE}"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             android:layout_marginLeft="@dimen/dp_10"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/color_000"
-                            android:textStyle="bold"
                             android:text="@{user.name}"
-                            tools:text="李云龙"/>
+                            android:textColor="@color/color_000"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:visibility="@{expand?View.GONE:View.VISIBLE}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/top_user_avatar"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="李云龙" />
+
                         <TextView
                             android:id="@+id/top_user_name_large"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/color_000"
-                            android:textSize="18sp"
-                            android:textColorHint="@color/color_000"
-                            android:textStyle="bold"
                             android:text="@{user.name}"
+                            android:textColor="@color/color_000"
+                            android:textColorHint="@color/color_000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
                             android:visibility="@{expand?View.VISIBLE:View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            tools:text="赵刚"/>
+                            tools:text="赵刚" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <!-- 页面导航栏 -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="bottom"
+                app:tabGravity="center"
+                app:tabIndicator="@null"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/color_theme"
+                app:tabTextColor="@color/color_999"
+                tools:background="@color/purple_700">
+
+
+            </com.google.android.material.tabs.TabLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
-
-        <!-- 页面导航栏 -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_40"
-            tools:background="@color/purple_700">
-
-
-        </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"

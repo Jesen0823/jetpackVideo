@@ -33,6 +33,7 @@ import com.jesen.cod.jetpackvideo.ui.home.FeedAdapter;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.PixUtils;
+import com.jesen.cod.libcommon.utils.StatusBarUtil;
 import com.jesen.cod.libcommon.view.EmptyView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -72,6 +73,7 @@ public class TagDetailFeedListActivity extends AppCompatActivity implements View
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StatusBarUtil.fitSystemBar(this);
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_tag_detail_feed_list);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_tag_detail_feed_list);
@@ -150,22 +152,19 @@ public class TagDetailFeedListActivity extends AppCompatActivity implements View
         headerBinding.setLifecycleOwner(this);
         mAdapter.addHeaderView(headerBinding.getRoot());
 
+        Og.d(TAG+", addHeaderView, toBar height: "+ PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT)+"px");
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 totalScrollY += dy;
-                if (totalScrollY > PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT)) {
-                    mBinding.tagLogo.setVisibility(View.VISIBLE);
-                    mBinding.tagTitle.setVisibility(View.VISIBLE);
-                    mBinding.followTagBtn.setVisibility(View.VISIBLE);
-                    mBinding.backBtn.setColorFilter(Color.BLACK);
-                } else {
-                    mBinding.tagLogo.setVisibility(View.GONE);
-                    mBinding.tagTitle.setVisibility(View.GONE);
-                    mBinding.followTagBtn.setVisibility(View.GONE);
-                    mBinding.backBtn.setColorFilter(Color.WHITE);
-                }
+                boolean overHeight = totalScrollY > PixUtils.dp2px(HEADER_TITLE_BAR_HEIGHT);
+                Og.d(TAG+", addHeaderView, toBar totalScrollY: "+ totalScrollY+"px");
+                Og.d(TAG+", addHeaderView, current dx: "+ dx+"px");
+                mBinding.topBarGroup.setVisibility(overHeight?View.VISIBLE:View.GONE);
+                mBinding.backBtn.setColorFilter(overHeight?Color.BLACK:Color.WHITE);
+                mBinding.topBar.setBackgroundColor(overHeight ? Color.WHITE : Color.TRANSPARENT);
+                mBinding.topLine.setVisibility(overHeight ? View.VISIBLE : View.INVISIBLE);
             }
         });
     }

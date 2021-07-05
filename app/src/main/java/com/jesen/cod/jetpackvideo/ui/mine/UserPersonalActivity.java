@@ -60,20 +60,6 @@ public class UserPersonalActivity extends AppCompatActivity {
         ViewPager2 viewPager = mBinding.viewPager;
         TabLayout tabLayout = mBinding.tabLayout;
 
-        // ViewPager2和TabLayout的关联
-        // autoRefresh: 当调用ViewPager的adapter#notifyChanged()时要不要主动把tabLayout选项卡移除掉重新复制
-        new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(tabs[position]);
-            }
-        }).attach();
-
-        mTabType = getInitTabPosition();
-        if (mTabType != TAB_ALL.ordinal()) {
-            viewPager.post(() -> viewPager.setCurrentItem(mTabType));
-        }
-
         viewPager.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
@@ -87,6 +73,20 @@ public class UserPersonalActivity extends AppCompatActivity {
                 return tabs.length;
             }
         });
+
+        // ViewPager2和TabLayout的关联
+        // autoRefresh: 当调用ViewPager的adapter#notifyChanged()时要不要主动把tabLayout选项卡移除掉重新复制
+        new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(tabs[position]);
+            }
+        }).attach();
+
+        mTabType = getInitTabPosition();
+        if (mTabType != TAB_ALL.ordinal()) {
+            viewPager.post(() -> viewPager.setCurrentItem(mTabType, false));
+        }
 
         mBinding.appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override

@@ -43,8 +43,6 @@ public class PageListPlayDetector {
                     mRecyclerView.removeCallbacks(delayAutoPlay);
                     recyclerView.removeOnScrollListener(scrollListener);
                     owner.getLifecycle().removeObserver(this);
-                    recyclerView.getAdapter().unregisterAdapterDataObserver(mDataObserver);
-                    owner.getLifecycle().removeObserver(this);
                 }
             }
         });

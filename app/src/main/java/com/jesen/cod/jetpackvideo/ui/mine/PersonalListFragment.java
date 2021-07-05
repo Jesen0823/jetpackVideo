@@ -52,7 +52,7 @@ public class PersonalListFragment extends AbsListFragment<Feed, PersonalListView
     public PagedListAdapter getAdapter() {
         mTabType = getArguments().getInt(UserPersonalActivity.KEY_TYPE_PERSONAL_TAB);
         tabTypeValue = PersonalTabType.values()[mTabType].toString();
-        Og.d(TAG + ", get from intent, mTabType" + tabTypeValue);
+        Og.d(TAG + ", get from intent, mTabType :" + tabTypeValue);
         return new PersonalListAdapter(getContext(), tabTypeValue) {
             @Override
             public void onViewDetachedFromWindow2(ViewHolder holder) {

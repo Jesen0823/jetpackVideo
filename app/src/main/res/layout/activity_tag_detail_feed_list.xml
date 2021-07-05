@@ -24,28 +24,38 @@
             layout="@layout/layout_refresh_view" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_48">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:fitsSystemWindows="true">
 
             <ImageView
                 android:id="@+id/back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginLeft="@dimen/dimen_16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/back_left_arrow" />
+
+            <!-- 顶部logo,tagTitle,关注按钮打包成Group,管理Visible属性 -->
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/top_bar_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="tag_logo,tag_title,follow_tag_btn"/>
 
             <com.jesen.cod.jetpackvideo.ui.view.ViImageView
                 android:id="@+id/tag_logo"
                 image_url="@{tagList.icon}"
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="@dimen/dp_30"
-                android:layout_marginStart="@dimen/dimen_10"
-                android:layout_marginTop="18dp"
-                app:layout_constraintStart_toEndOf="@+id/back_btn"
+                android:layout_marginLeft="@dimen/dimen_10"
+                app:layout_constraintLeft_toRightOf="@+id/back_btn"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:radius="@{8}"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -54,12 +64,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10"
-                android:layout_marginTop="17dp"
                 android:text="@{tagList.title}"
                 android:textColor="@color/color_000"
                 android:textSize="13sp"
-                app:layout_constraintStart_toEndOf="@+id/tag_logo"
+                app:layout_constraintLeft_toRightOf="@+id/tag_logo"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="夏日进行时"/>
 
             <com.google.android.material.button.MaterialButton
@@ -68,6 +78,7 @@
                 android:layout_height="28dp"
                 android:text="@{tagList.hasFollow?@string/tag_follow:@string/tag_unfollow}"
                 android:textSize="13sp"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:onClick="@{()->InteractionPresenter.toggleTagLike(owner, tagList)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -75,6 +86,7 @@
                 app:backgroundTint="@color/color_theme"
                 app:cornerRadius="8dp"/>
             <View
+                android:id="@+id/top_line"
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_marginHorizontal="@dimen/dp_5"

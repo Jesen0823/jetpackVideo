@@ -19,7 +19,6 @@
 
         <com.jesen.cod.jetpackvideo.ui.view.ViImageView
             image_url="@{user.avatar}"
-            radius="@{50}"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="fitXY"
