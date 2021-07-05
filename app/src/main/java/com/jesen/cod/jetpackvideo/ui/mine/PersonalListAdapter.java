@@ -17,6 +17,7 @@ import com.jesen.cod.jetpackvideo.model.PersonalTabType;
 import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.home.FeedAdapter;
 import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
+import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.utils.TimeUtils;
 import com.jesen.cod.libcommon.utils.Og;
 
@@ -42,6 +43,13 @@ public class PersonalListAdapter extends FeedAdapter {
             isCommentTab = true;
             return R.layout.layout_feed_type_comment;
 
+        } else if (TextUtils.equals(mCategory, PersonalTabType.TAB_ALL.toString())) {
+            isCommentTab = false;
+            Feed feed = getItem(position);
+            if (feed.topComment != null && feed.topComment.userId == UserManager.get().getUserId()) {
+                return R.layout.layout_feed_type_comment;
+            }
+            return super.getItemViewType2(position);
         } else {
             isCommentTab = false;
             return super.getItemViewType2(position);
@@ -51,7 +59,6 @@ public class PersonalListAdapter extends FeedAdapter {
     @Override
     protected void onBindViewHolder2(ViewHolder holder, int position) {
         super.onBindViewHolder2(holder, position);
-        View disLikeV = holder.itemView.findViewById(R.id.diss);
         View delFeedV = holder.itemView.findViewById(R.id.feed_delete);
         TextView createTime = holder.itemView.findViewById(R.id.create_time);
 
@@ -59,16 +66,14 @@ public class PersonalListAdapter extends FeedAdapter {
         createTime.setVisibility(View.VISIBLE);
         createTime.setText(TimeUtils.calculate(item.createTime));
 
-        if (isCommentTab) {
-            disLikeV.setVisibility(View.GONE);
-        }
+        delFeedV.setVisibility(View.VISIBLE);
         delFeedV.setOnClickListener(v -> {
             if (isCommentTab) {
                 // 删除评论
                 InteractionPresenter.deleteFeedComment(mContext, item.itemId, item.topComment.commentId).observe((LifecycleOwner) mContext, new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean success) {
-                        if (success) refreshList(item);
+                        refreshList(item);
                     }
                 });
             }
@@ -77,7 +82,7 @@ public class PersonalListAdapter extends FeedAdapter {
                 InteractionPresenter.deleteFeed(mContext, item.itemId).observe((LifecycleOwner) mContext, new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean success) {
-                        if (success) refreshList(item);
+                        refreshList(item);
                     }
                 });
             }

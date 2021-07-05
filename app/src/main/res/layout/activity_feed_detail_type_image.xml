@@ -24,6 +24,7 @@
                 android:id="@+id/back_close"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_16"
                 android:src="@drawable/back_left_arrow"
                 android:paddingRight="@dimen/dp_16" />
@@ -31,12 +32,19 @@
             <TextView
                 android:id="@+id/page_title_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="@dimen/dp_16"
+                android:textSize="@dimen/sp_16"
                 android:textColor="@color/color_000"
-                android:text="@string/feed_detail_type_image_title"
-                android:gravity="center" />
+                android:text="@string/feed_detail_type_image_title" />
+
+            <include
+                android:id="@+id/detail_author_info_layout"
+                layout="@layout/activity_feed_detail_author_info"
+                app:leftMargin="@{PixUtils.dp2px(60)}"
+                android:visibility="gone"
+                app:fullScreen="@{false}"
+                app:feed="@{feed}"/>
 
             <View
                 android:layout_width="match_parent"
@@ -44,23 +52,17 @@
                 android:background="@color/color_gray2"
                 android:layout_gravity="bottom" />
 
-            <include layout="@layout/activity_feed_detail_author_info"
-                android:id="@+id/detail_author_info_layout"
-                app:leftMargin="@{PixUtils.dp2px(60)}"
-                android:visibility="gone"
-                app:fullScreen="@{false}"
-                app:feed="@{feed}"/>
-
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_0"
+            android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <include layout="@layout/layout_feed_detail_bottom_interaction"
+        <include
             android:id="@+id/bottom_interaction_layout"
+            layout="@layout/layout_feed_detail_bottom_interaction"
             app:feed="@{feed}"
             app:fullScreen="@{false}"/>
     </LinearLayout>

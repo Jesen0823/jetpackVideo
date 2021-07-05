@@ -46,6 +46,7 @@ public class FeedDetailViewModel extends AbsViewModel<Comment> {
         }
 
         private void loadData(Integer key, int requestedLoadSize, LoadCallback<Comment> callback) {
+            Og.i(TAG+", loadData, mItemId:"+mItemId);
             ApiResponse<List<Comment>> response = ApiService.get(COMMENT_LIST_URL)
                     .addParams("id", key)
                     .addParams("itemId", mItemId)

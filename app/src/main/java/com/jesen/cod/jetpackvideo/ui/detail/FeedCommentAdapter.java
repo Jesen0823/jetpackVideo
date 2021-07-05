@@ -2,6 +2,7 @@ package com.jesen.cod.jetpackvideo.ui.detail;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.jesen.cod.jetpackvideo.databinding.LayoutFeedCommentListItemBinding;
 import com.jesen.cod.jetpackvideo.model.Comment;
+import com.jesen.cod.jetpackvideo.model.Feed;
 import com.jesen.cod.jetpackvideo.ui.MutableItemKeyedDataSource;
 import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
@@ -32,6 +35,11 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
     private static final String TAG = "FeedCommentAdapter";
     private Context mContext;
     private LayoutInflater mInflater;
+    private Feed mFeed;
+
+    public void setFeed(Feed feed){
+        mFeed = feed;
+    }
 
     protected FeedCommentAdapter(Context context) {
         super(new DiffUtil.ItemCallback<Comment>() {
@@ -136,8 +144,14 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment, FeedComment
 
         public void bindData(Comment item) {
             mBinding.setComment(item);
+            boolean isAuthor = item.author == null||mFeed==null ? false : mFeed.authorId == item.author.userId;
+
             boolean self = item.author == null ? false : UserManager.get().getUserId() == item.author.userId;
-            mBinding.labelAuthor.setVisibility(self ? View.VISIBLE : View.GONE);
+            mBinding.labelAuthor.setVisibility(isAuthor ? View.VISIBLE : View.GONE);
+            if (self){
+                mBinding.labelAuthor.setVisibility(View.VISIBLE);
+                mBinding.labelAuthor.setText("我");
+            }
             mBinding.commentDelete.setVisibility(self ? View.VISIBLE : View.GONE);
             if (!TextUtils.isEmpty(item.imageUrl)) {
                 mBinding.commentExt.setVisibility(View.VISIBLE);

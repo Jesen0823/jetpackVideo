@@ -42,12 +42,6 @@ public abstract class AbsViewModel<T> extends ViewModel {
                 .setBoundaryCallback(callback)
                 .build();
 
-        pagedListLiveData.observeForever(new Observer<PagedList<T>>() {
-            @Override
-            public void onChanged(PagedList<T> pagedList) {
-                //adapter.submitList();
-            }
-        });
     }
 
     public LiveData<PagedList<T>> getPagedListLiveData() {

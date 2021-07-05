@@ -44,6 +44,8 @@ public class ImageViewHandler extends ViewHandler {
                 .inflate(LayoutInflater.from(mActivity), mRecyclerView,false);
         mHeaderBinding.setFeed(mFeed);
 
+        mListAdapter.setFeed(mFeed);
+
         ViImageView headerImage = mHeaderBinding.headerImage;
         headerImage.bindData(mFeed.cover,mFeed.width, mFeed.height,mFeed.width>mFeed.height?0:16);
 

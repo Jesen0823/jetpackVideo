@@ -114,7 +114,7 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Og.i("item click, go detail page, feed:"+feed.id+",mCategory:"+mCategory+",mContext:"+mContext.toString());
+                Og.i("item click, go detail page, feed:"+feed.id+", itemId:"+feed.itemId+", feedContent:"+feed.feeds_text);
                 FeedDetailActivity.startFeedDetailActivity(mContext, feed,mCategory);
                 onStartFeedDetailActivity(feed);
                 if (mFeedObserver == null){

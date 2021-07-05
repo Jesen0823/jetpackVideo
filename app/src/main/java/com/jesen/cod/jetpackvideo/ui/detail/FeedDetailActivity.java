@@ -30,7 +30,7 @@ public class FeedDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Feed feed = (Feed) getIntent().getSerializableExtra(KEY_FEED);
-        Og.d(TAG + ", onCreate, feed.id = " + feed.id);
+        Og.d(TAG + ", onCreate, feed.id = " + feed.id+", feedContent: "+feed.feeds_text);
         if (feed == null) {
             finish();
             return;

@@ -60,6 +60,8 @@ public class VideoViewHandler extends ViewHandler {
         super.bindInitData(feed);
         mBinding.setFeed(feed);
 
+        mListAdapter.setFeed(feed);
+
         mCategory = mActivity.getIntent().getStringExtra(FeedDetailActivity.KEY_CATEGORY);
         mPlayView.bindData(mCategory, mFeed.width, mFeed.height, mFeed.cover, mFeed.url);
 

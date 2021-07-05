@@ -66,15 +66,13 @@ public abstract class ViewHandler {
             }
         };
         mRecyclerView.setAdapter(mListAdapter);
+        Og.i("ViewHandler, set to detailViewModel, feed:"+mFeed.id+", itemId:"+mFeed.itemId+", feeds_text:"+mFeed.feeds_text);
 
         detailViewModel.setItemId(mFeed.itemId);
 
         detailViewModel.getPagedListLiveData().observe(mActivity, new Observer<PagedList<Comment>>() {
             @Override
             public void onChanged(PagedList<Comment> comments) {
-
-                Og.d(TAG + String.format(", bindInitData, onChanged, first item of comments:\n id " +
-                        "= %d\n commentContent = %s", comments.get(0).id, comments.get(0).commentCount));
 
                 mListAdapter.submitList(comments);
 
