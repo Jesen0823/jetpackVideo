@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.mine.UserFavoriteHistoryActivity"></activity>
+        <activity android:name=".ui.dashboard.PagerSnapActivity"></activity>
+        <activity android:name=".ui.mine.UserFavoriteHistoryActivity" />
         <activity android:name=".ui.mine.UserPersonalActivity" />
         <activity android:name=".ui.find.TagDetailFeedListActivity" />
         <activity

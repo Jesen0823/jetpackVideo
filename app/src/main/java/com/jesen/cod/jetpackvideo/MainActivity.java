@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jesen.cod.jetpackvideo.model.Destination;
 import com.jesen.cod.jetpackvideo.model.User;
+import com.jesen.cod.jetpackvideo.ui.dashboard.PagerSnapActivity;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
 import com.jesen.cod.jetpackvideo.ui.view.AppBottomBar;
 import com.jesen.cod.jetpackvideo.utils.AppConfig;
@@ -66,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //NavGraphBuilder.build(navController);
         NavGraphBuilder.build(navController, fragment.getChildFragmentManager(), this, fragment.getId());
         navView.setOnNavigationItemSelectedListener(this);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v->{
+            PagerSnapActivity.startActivity(this);
+        });
     }
 
 
