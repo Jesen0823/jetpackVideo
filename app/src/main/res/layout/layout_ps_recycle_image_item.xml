@@ -26,18 +26,20 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView
-            android:id="@+id/player_view_full"
+        <com.jesen.cod.jetpackvideo.ui.view.ViImageView
+            android:id="@+id/feed_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:min_height="200dp"
             android:layout_gravity="center_vertical"
             app:layout_behavior=".ui.detail.ViewZoomBehavior">
 
-        </com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView>
+        </com.jesen.cod.jetpackvideo.ui.view.ViImageView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/interaction_control"
             android:layout_width="match_parent"
+            android:backgroundTint="@color/transparent"
             android:layout_height="match_parent">
 
             <com.google.android.material.button.MaterialButton

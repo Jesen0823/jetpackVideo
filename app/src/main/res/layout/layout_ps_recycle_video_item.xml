@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="Feed" />
+
+        <variable
+            name="user"
+            type="com.jesen.cod.jetpackvideo.model.User" />
+
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter" />
+
+        <import type="com.jesen.cod.jetpackvideo.model.Feed" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView
+            android:id="@+id/player_view_full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:min_height="200dp"
+            android:layout_gravity="center_vertical"
+            app:layout_behavior=".ui.detail.ViewZoomBehavior">
+
+        </com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/interaction_control"
+            android:layout_width="match_parent"
+            android:backgroundTint="@color/transparent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_16"
+                android:text="关注"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:icon="@drawable/wode_pressed"
+                app:iconGravity="start"
+                app:iconSize="@dimen/dp_30"
+                app:iconTintMode="multiply"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/praise_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:drawableTop="@drawable/icon_like"
+                android:text="1000"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/comment_btn"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/comment_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:drawableTop="@drawable/ic_comment"
+                android:text="1000"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/share_btn"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/share_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:drawableTop="@drawable/ic_share"
+                android:text="100"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

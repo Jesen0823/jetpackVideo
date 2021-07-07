@@ -56,6 +56,8 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
         mRefreshLayout.setOnRefreshListener(this);
         mRefreshLayout.setOnLoadMoreListener(this);
 
+        extendSettingView();
+
         mAdapter = getAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
@@ -99,6 +101,11 @@ public abstract class AbsListFragment<T, M extends AbsViewModel<T>> extends Frag
                 }
             });
         }
+    }
+
+    // 扩展方法，自定义设置
+    public void extendSettingView(){
+
     }
 
     /**

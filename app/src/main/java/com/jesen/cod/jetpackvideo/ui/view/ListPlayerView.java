@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.adapters.ViewBindingAdapter;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -31,8 +32,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerControlView.VisibilityListener, Player.EventListener {
 
-    private final View bufferView;
-    protected ViImageView cover, blur;
+    private static final String TAG = "ListPlayerView";
+    public View bufferView;
+    public ViImageView cover, blur;
     private final ImageView playBtn;
     protected String mCategory;
     protected String mVideoUrl;
@@ -56,14 +58,18 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
 
+        //缓冲转圈圈的view
         bufferView = findViewById(R.id.buffer_view);
+        // 封面图
         cover = findViewById(R.id.cover);
+        // 高斯模糊背景图
         blur = findViewById(R.id.blur_background);
         playBtn = findViewById(R.id.play_btn);
 
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Og.d(TAG + ", clicked playBtn, isPlaying:" + isPlaying());
                 if (isPlaying()) {
                     inActive();
                 } else {
@@ -79,8 +85,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         mVideoUrl = videoUrl;
         mWidthPx = widthPx;
         mHeightPx = heightPx;
-
         cover.setImageUrl(cover, coverUrl, false);
+
         if (widthPx < heightPx) {
             blur.setBlurImageUrl(blur, coverUrl, 10);
             blur.setVisibility(VISIBLE);
@@ -129,6 +135,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public void onVisibilityChange(int visibility) {
+        Og.d(TAG + ", onVisibilityChange, visibility:" + visibility);
         playBtn.setVisibility(visibility);
         playBtn.setImageResource(isPlaying() ? R.drawable.icon_video_pause : R.drawable.icon_video_play);
     }
@@ -140,6 +147,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public void onActive() {
+        Og.d(TAG + ", onActive");
         //视频播放,或恢复播放
 
         //通过该View所在页面的mCategory(比如首页列表tab_all,沙发tab的tab_video,标签帖子聚合的tag_feed) 字段，
@@ -203,9 +211,9 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        Og.d("ListPlayerView, onAttachedToWindow.");
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Og.d(TAG + ", onAttachedToWindow.");
         isPlaying = false;
         bufferView.setVisibility(GONE);
         cover.setVisibility(VISIBLE);
@@ -215,6 +223,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
     @Override
     public void inActive() {
+        Og.d(TAG + ", inActive");
+
         //暂停视频的播放并让封面图和 开始播放按钮 显示出来
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
         if (pageListPlay.exoPlayer == null || pageListPlay.mControllerView == null || pageListPlay.exoPlayer == null)
@@ -224,6 +234,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         pageListPlay.mControllerView.setVisibilityListener(null);
         pageListPlay.exoPlayer.removeListener(this);
         cover.setVisibility(VISIBLE);
+        Og.d(TAG + ", inActive, playBtn set Visible");
         playBtn.setVisibility(VISIBLE);
         playBtn.setImageResource(R.drawable.icon_video_play);
     }
@@ -246,7 +257,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
             bufferView.setVisibility(VISIBLE);
         }
         isPlaying = playbackState == Player.STATE_READY && exoPlayer.getBufferedPosition() != 0 && playWhenReady;
-        playBtn.setImageResource(isPlaying ? R.drawable.detail_share : R.drawable.icon_video_play);
+        Og.d(TAG + ", onPlayerStateChanged, playbackState is :" + playbackState + ", isPlaying:" + isPlaying);
+        playBtn.setImageResource(isPlaying ? R.drawable.icon_video_pause : R.drawable.icon_video_play);
     }
 
     public View getPlayController() {
@@ -263,4 +275,5 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         }
         return true;
     }
+
 }

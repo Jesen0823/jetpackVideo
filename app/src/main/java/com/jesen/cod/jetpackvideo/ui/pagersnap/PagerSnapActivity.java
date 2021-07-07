@@ -1,12 +1,17 @@
-package com.jesen.cod.jetpackvideo.ui.dashboard;
+package com.jesen.cod.jetpackvideo.ui.pagersnap;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,97 +21,82 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.jesen.cod.jetpackvideo.R;
+import com.jesen.cod.jetpackvideo.databinding.ActivityPagerSnapBinding;
 import com.jesen.cod.jetpackvideo.utils.ToastUtil;
+import com.jesen.cod.libcommon.utils.Og;
+import com.jesen.cod.libcommon.utils.StatusBarUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class PagerSnapActivity extends AppCompatActivity {
 
-    private PagerSnapViewModel pagerSnapViewModel;
-    private RecyclerView mRecyclerView;
-    private PagerSnapHelperAdapter mAdapter;
+    private static final String TAG = "PagerSnapActivity";
 
+    private ActivityPagerSnapBinding mBinding;
 
-    public static void startActivity(Context context){
+    public static void startActivity(Context context) {
         Intent intent = new Intent(context, PagerSnapActivity.class);
         context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StatusBarUtil.fitSystemBar(this);
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager_snap);
+        //setContentView(R.layout.activity_pager_snap);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_pager_snap);
 
-        pagerSnapViewModel =
-                new ViewModelProvider(this).get(PagerSnapViewModel.class);
+        String[] tabs = getResources().getStringArray(R.array.snap_tabs);
+        ViewPager2 viewPager2 = mBinding.viewPager;
+        TabLayout tabLayout = mBinding.tabLayout;
 
-        mRecyclerView = findViewById(R.id.ps_recycler_view);
-        mRecyclerView.setNestedScrollingEnabled(false);
-
-        initUI();
-    }
-
-    public void initUI() {
-        // PagerSnapHelper
-        PagerSnapHelper snapHelper = new PagerSnapHelper() {
-            // 在 Adapter的 onBindViewHolder 之后执行
+        viewPager2.setAdapter(new FragmentStateAdapter(this) {
+            @NonNull
             @Override
-            public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-                // TODO 找到对应的Index
-                Log.e("xiaxl: ", "---findTargetSnapPosition---");
-                int targetPos = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
-                Log.e("xiaxl: ", "targetPos: " + targetPos);
-
-                ToastUtil.show(PagerSnapActivity.this,"滑到到 " + targetPos + "位置");
-
-                return targetPos;
+            public Fragment createFragment(int position) {
+                Og.d(TAG + ",setAdapter createFragment");
+                return PagerSnapFragment.newInstance(getTabTypeByPosition(position));
             }
 
-            // 在 Adapter的 onBindViewHolder 之后执行
-            @Nullable
             @Override
-            public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-                // TODO 找到对应的View
-                Log.e("xiaxl: ", "---findSnapView---");
-                View view = super.findSnapView(layoutManager);
-                Log.e("xiaxl: ", "tag: " + view.getTag());
-
-                return view;
-            }
-        };
-        snapHelper.attachToRecyclerView(mRecyclerView);
-
-        // ---布局管理器---
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        // 默认是Vertical (HORIZONTAL则为横向列表)
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        // 这么写是为了获取RecycleView的宽高
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    mRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-
-                /**
-                 *  这么写是为了获取RecycleView的宽高
-                 */
-
-                // 设置Adapter
-                mRecyclerView.setAdapter(mAdapter);
-                pagerSnapViewModel.getData().observe(PagerSnapActivity.this, new Observer<List<String>>() {
-                    @Override
-                    public void onChanged(List<String> strings) {
-                        mAdapter.setDataList(strings);
-                    }
-                });
+            public int getItemCount() {
+                return tabs.length;
             }
         });
+
+
+        // ViewPager2和TabLayout的关联
+        // autoRefresh: 当调用ViewPager的adapter#notifyChanged()时要不要主动把tabLayout选项卡移除掉重新复制
+        new TabLayoutMediator(tabLayout, viewPager2, false, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull @NotNull TabLayout.Tab tab, int position) {
+                tab.setText(tabs[position]);
+            }
+        }).attach();
+
+        // 默认选中第一个tab
+        viewPager2.post(() -> viewPager2.setCurrentItem(0, false));
+
+    }
+
+    private String getTabTypeByPosition(int position) {
+        String feedType = "";
+        if (position == 0) {
+            feedType = "video";
+        } else if (position == 1) {
+            feedType = "text";
+        }
+        return feedType;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

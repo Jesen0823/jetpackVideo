@@ -61,4 +61,8 @@
         <item>帖子</item>
         <item>评论</item>
     </string-array>
+    <string-array name="snap_tabs">
+        <item>视频</item>
+        <item>图文</item>
+    </string-array>
 </resources>

@@ -32,7 +32,7 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
 
 
     public static HomeFragment newInstance(String feedType) {
-       Og.d("HomeFragment, feedType: "+feedType);
+       Og.d("HomeFragment, newInstance feedType: "+feedType);
         Bundle args = new Bundle();
         args.putString("feedType", feedType);
         HomeFragment fragment = new HomeFragment();
