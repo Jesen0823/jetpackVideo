@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.jesen.cod.jetpackvideo.R;
 import com.jesen.cod.jetpackvideo.databinding.ActivityPagerSnapBinding;
+import com.jesen.cod.jetpackvideo.exoplayer.PageListPlayManager;
 import com.jesen.cod.jetpackvideo.utils.ToastUtil;
 import com.jesen.cod.libcommon.utils.Og;
 import com.jesen.cod.libcommon.utils.StatusBarUtil;
@@ -98,5 +99,11 @@ public class PagerSnapActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PageListPlayManager.removePageListPlay("video");
     }
 }

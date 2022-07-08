@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
@@ -26,25 +25,25 @@ import com.jesen.cod.libcommon.utils.PixUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-public class FullScreenPlayerView extends ListPlayerView {
+public class SnapScreenPlayerView extends ListPlayerView {
 
-    private static final String TAG = "FullScreenPlayerView";
+    private static final String TAG = "SnapScreenPlayerView";
 
     private final PlayerView mExoPlayerView;
 
-    public FullScreenPlayerView(@NonNull @NotNull Context context) {
+    public SnapScreenPlayerView(@NonNull @NotNull Context context) {
         this(context, null);
     }
 
-    public FullScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs) {
+    public SnapScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FullScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SnapScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public FullScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SnapScreenPlayerView(@NonNull @NotNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
         mExoPlayerView = (PlayerView) LayoutInflater.from(context).inflate(R.layout.layout_exo_player_view, null, false);
@@ -115,8 +114,8 @@ public class FullScreenPlayerView extends ListPlayerView {
 
         //如果是同一个视频资源,则不需要从重新创建mediaSource。
         //但需要onPlayerStateChanged 否则不会触发onPlayerStateChanged()
-        Og.d("FullScreenPlayerView, pageListPlay.playUrl: "+ pageListPlay.playUrl);
-        Og.d("FullScreenPlayerView, mVideoUrl: "+ mVideoUrl);
+        Og.d("SnapScreenPlayerView, pageListPlay.playUrl: "+ pageListPlay.playUrl);
+        Og.d("SnapScreenPlayerView, mVideoUrl: "+ mVideoUrl);
 
         if (TextUtils.equals(pageListPlay.playUrl, mVideoUrl)) {
             onPlayerStateChanged(true, Player.STATE_READY);
@@ -165,4 +164,5 @@ public class FullScreenPlayerView extends ListPlayerView {
         }
         super.setLayoutParams(params);
     }
+
 }

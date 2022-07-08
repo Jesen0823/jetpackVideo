@@ -157,6 +157,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
         PlayerControlView controlView = pageListPlay.mControllerView;
         SimpleExoPlayer exoPlayer = pageListPlay.exoPlayer;
         if (playerView == null) {
+            Og.d(TAG+", onActive , playerView is null, return");
             return;
         }
 
@@ -227,8 +228,10 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget, PlayerCo
 
         //暂停视频的播放并让封面图和 开始播放按钮 显示出来
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
-        if (pageListPlay.exoPlayer == null || pageListPlay.mControllerView == null || pageListPlay.exoPlayer == null)
+        if (pageListPlay.exoPlayer == null || pageListPlay.mControllerView == null) {
+            Og.d(TAG+", inActive return");
             return;
+        }
         // 暂停播放
         pageListPlay.exoPlayer.setPlayWhenReady(false);
         pageListPlay.mControllerView.setVisibilityListener(null);

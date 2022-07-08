@@ -43,9 +43,6 @@ public class PagerSnapFragment extends AbsListFragment<Feed, PagerSnapViewModel>
     public static final String KEY_FEED_TYPE_SNAP = "snap_feedType";
     private PageListPlayDetector playDetector;
     private String mFeedType;
-    private boolean shouldPause = true;
-    // 是否点击了返回键
-    private boolean backPressed;
 
     public static PagerSnapFragment newInstance(String feedType) {
         Og.d(TAG + ",newInstance feedType:" + feedType);
@@ -142,8 +139,6 @@ public class PagerSnapFragment extends AbsListFragment<Feed, PagerSnapViewModel>
             @Override
             public void onStartFeedDetailActivity(Feed feed) {
                 boolean isVideo = feed.itemType == Feed.TYPE_VIDEO;
-                // 为了无缝续播，视频类型跳转页面，不暂停
-                shouldPause = !isVideo;
             }
 
             @Override
@@ -229,7 +224,6 @@ public class PagerSnapFragment extends AbsListFragment<Feed, PagerSnapViewModel>
     @Override
     public void onDestroy() {
         Og.d(  TAG+", onDestroy, feedType:" + mFeedType);
-        PageListPlayManager.removePageListPlay(mFeedType);
         super.onDestroy();
     }
 }

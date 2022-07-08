@@ -30,6 +30,7 @@ import com.jesen.cod.jetpackvideo.ui.detail.FeedDetailActivity;
 import com.jesen.cod.jetpackvideo.ui.home.InteractionPresenter;
 import com.jesen.cod.jetpackvideo.ui.view.FullScreenPlayerView;
 import com.jesen.cod.jetpackvideo.ui.view.ListPlayerView;
+import com.jesen.cod.jetpackvideo.ui.view.SnapScreenPlayerView;
 import com.jesen.cod.libcommon.extention.AbsPagedListAdapter;
 import com.jesen.cod.libcommon.extention.LiveDataBus;
 import com.jesen.cod.libcommon.utils.Og;
@@ -118,7 +119,7 @@ public class PagerSnapHelperAdapter extends AbsPagedListAdapter<Feed,PagerSnapHe
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ViewDataBinding mBinding;
-        public FullScreenPlayerView listPlayerView;
+        public SnapScreenPlayerView   snapPlayerView;
         public ImageView feedImage;
 
         public ViewHolder(@NonNull View itemView, ViewDataBinding binding) {
@@ -136,7 +137,7 @@ public class PagerSnapHelperAdapter extends AbsPagedListAdapter<Feed,PagerSnapHe
             if (mBinding instanceof LayoutPsRecycleVideoItemBinding) {
                 LayoutPsRecycleVideoItemBinding videoBinding = (LayoutPsRecycleVideoItemBinding) mBinding;
                 videoBinding.playerViewFull.bindData(mFeedType, item.width, item.height, item.cover, item.url);
-                listPlayerView = videoBinding.playerViewFull;
+                  snapPlayerView = videoBinding.playerViewFull;
 
             } else if (mBinding instanceof LayoutPsRecycleImageItemBinding) {
                 LayoutPsRecycleImageItemBinding imageBinding = (LayoutPsRecycleImageItemBinding) mBinding;
@@ -150,7 +151,7 @@ public class PagerSnapHelperAdapter extends AbsPagedListAdapter<Feed,PagerSnapHe
         }
 
         public ListPlayerView getListPlayerView() {
-            return listPlayerView;
+            return   snapPlayerView;
         }
     }
 

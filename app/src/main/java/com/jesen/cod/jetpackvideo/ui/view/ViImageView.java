@@ -1,6 +1,7 @@
 package com.jesen.cod.jetpackvideo.ui.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -70,6 +71,12 @@ public class ViImageView extends AppCompatImageView {
 
     public void bindData(String imageUrl, int widthPx, int heightPx, int marginLeft) {
         bindData(imageUrl, widthPx, heightPx, marginLeft, PixUtils.getScreenWidth(), PixUtils.getScreenWidth());
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
     }
 
     public void bindData(String imageUrl, int widthPx, int heightPx, int marginLeft, int maxWidth,

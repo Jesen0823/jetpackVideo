@@ -1,0 +1,96 @@
+1. LiveData特点：
+
+确保UI符合数据状态
+不需要手动处理生命周期,宿主生命周期改变，livedata的观察者触发onChange方法
+始终保持最新数据
+事件总线LiveDataBus
+
+mVersion同步标记位，observe注册观察者模式，将LifeCycleOwner和observer包装成具有生命周期的对象LifecycleBoundObserver
+该对象包装成一个集合，设置给owner
+该对象再加上生命周期状态，包装成新对象ObserverWithState
+
+EventObserver的方法onStateChanged()是组件生命周期的变化
+该变化会回调到LifecycleBoundObserver，根据生命周期状态判断进入onActive()或onInActive()
+数据分发调用onChange()将泛型数据传入
+
+当前环境是子线程，必须用postValue()
+主线程只能用setValue()
+
+pageList:
+
+LivePageListBuilder的create会返回一个liveData对象
+其中ComputableLivaData会在livedata的onActive中操作一个线程池，添加RefreshRunnable任务
+
+RefreshRunnable中创建一个DataSource,会初始化数据加载
+invalidate 之后Paging会重新创建一个DataSource 重新调用它的loadInitial方法加载初始化数据
+会返回一个新pageList对象，回调到observeForever方法的onChange()从而再次submitList()
+
+PagedStorage用来存储一页页的数据，主要在字段mPages
+
+分页逻辑的处理，是在AsyncPagedListDiffer中，getItem,在loadAroundInternal()
+每次的数据回调在PageResult.Receiver中
+
+应用程序：JetpackVideo
+包名：com.jesen.cod.jetpackvideo
+签名：b3fe3798d365a5461baeb39c57e0b739
+APP ID：101957627
+APP Key：f994161bc108e29958e041eb04e078b5
+
+
+从视频列表进入视频详情页，无缝续播实现关键点：
+1.切换页面，别表播放不能暂停
+2.使用同一个播放器，这样视频源不会出现缓冲效果
+3.进入视频详情，要用新的PlayView,如果视频height < width，则全屏展示，上滑时视频缩短，底部互动区背景白色，
+
+实现，布局上采用CoordinatorLayout， 自定义ViewAnchorBehavior摆放各组件之间的相对位置
+自定义ViewZoomBehavior处理手势滑动效果，通过ViewDragHelper协调拦截手势
+
+当上滑到视频最小高度时视频固定不动，评论会继续向上滑动
+如果评论向下滑动，则视频向下拉长直到全屏展示，底部互动区背景透明化
+
+
+WorkManager：
+使用步骤：
+1. 构建 UploadFileWorker extends Worker{}
+
+2. 构建request对象：
+     OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UploadFileWorker.class)
+                  .setInputData(inputData)
+                  .build();
+
+3.获取uuid标志任务唯一特征属性，coverUuid = request.getId();
+
+4.创建WorkContinuation对象，通过WorkManager加入request实例，enqueue()方法加入队列
+
+WorkContinuation workContinuation = WorkManager.getInstance(
+                PublishActivity.this).beginWith(workRequests);
+        // 加入队列
+        workContinuation.enqueue();
+        workContinuation.getWorkInfosLiveData().observe(PublishActivity.this, new Observer<List<WorkInfo>>() {
+            @Override
+            public void onChanged(List<WorkInfo> workInfos) {
+
+            }
+        }
+
+
+ViewModel: 带有生命周期的数据对象
+特点：
+数据持有层，不会随设备旋转重建而丢失数据，可以将数据放入ViewModel存储而不是Activity
+因内存回收带来的页面重建，ViewModel是可以被回收的，也可以被重建
+ViewModelProviders.of(Activity/Fragment).get(XXXViewModel.class)
+同一个Activity,不同的Fragment之间页面通信，数据共享
+
+
+
+
+
+
+
+
+
+
+
+
+
+
