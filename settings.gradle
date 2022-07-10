@@ -1,3 +1,58 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url 'https://maven.aliyun.com/repository/google/'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url 'https://maven.aliyun.com/repository/central'
+            allowInsecureProtocol = true
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url "https://jitpack.io"
+            allowInsecureProtocol = true
+        }
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url 'https://maven.aliyun.com/repository/google/'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url 'https://maven.aliyun.com/repository/central'
+            allowInsecureProtocol = true
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+            allowInsecureProtocol = true
+        }
+        maven{
+            url "https://jitpack.io"
+            allowInsecureProtocol = true
+        }
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name = "JetpackVideo"
 include ':app'
 include ':lib_nav_annotation'

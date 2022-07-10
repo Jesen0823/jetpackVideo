@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 java {
@@ -12,9 +13,9 @@ java {
 
 dependencies {
     implementation fileTree(dir:'libs', include:['*.jar'])
-    implementation project(':libnavannotation')
+    api project(':libnavannotation')
     implementation 'com.squareup:javapoet:1.12.1'
-    implementation 'com.alibaba:fastjson:1.2.59'
+    implementation 'com.alibaba:fastjson:1.2.69'
     implementation 'com.google.auto.service:auto-service:1.0-rc6'
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
 }
