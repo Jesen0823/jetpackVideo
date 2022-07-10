@@ -47,6 +47,7 @@
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:elevation">0dp</item>
+        <item name="cornerRadius">@dimen/dp_25</item>
     </style>
 
 

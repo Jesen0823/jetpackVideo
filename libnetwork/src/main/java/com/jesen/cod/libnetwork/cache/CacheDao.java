@@ -31,7 +31,7 @@ public interface CacheDao {
      */
 
     //如果是一对多,这里可以写List<Cache>
-    @Query("select *from cache where `key`=:key")
+    @Query("select * from cache where `key`=:key")
     Cache getCache(String key);
 
     //只能传递对象,删除时根据Cache中的主键 来比对的

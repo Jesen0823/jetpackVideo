@@ -73,6 +73,10 @@ public class ApiService {
 
     }
 
+    /**
+     * 初始化 在Application的onCreate阶段
+     * @param convert 自定义对象解析，默认实现为JsonConvert，解析为json
+     * */
     public static void init(String baseUrl, Convert convert) {
         mBaseUrl = baseUrl;
         if (convert == null) {

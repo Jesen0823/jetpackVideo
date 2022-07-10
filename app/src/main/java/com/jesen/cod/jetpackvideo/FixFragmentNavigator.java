@@ -9,6 +9,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavDestination;
@@ -57,8 +58,11 @@ public class FixFragmentNavigator extends FragmentNavigator {
         String tag = className.substring(className.lastIndexOf(".") + 1);
         Fragment frag = mManager.findFragmentByTag(tag);
         if (frag == null) {
-            frag = instantiateFragment(mContext, mManager,
-                    className, args);
+            // deprecated 要用FragmentFactory
+            /*frag = instantiateFragment(mContext, mManager,
+                    className, args);*/
+            FragmentFactory factory = mManager.getFragmentFactory();
+            frag = factory.instantiate(mContext.getClassLoader(), className);
         }
         frag.setArguments(args);
         final FragmentTransaction ft = mManager.beginTransaction();
@@ -141,7 +145,7 @@ public class FixFragmentNavigator extends FragmentNavigator {
         }
     }
 
-    private String generateBackStackName(int backStackindex, int destid) {
-        return backStackindex + "-" + destid;
+    private String generateBackStackName(int backStackIndex, int destid) {
+        return backStackIndex + "-" + destid;
     }
 }

@@ -71,8 +71,8 @@ public abstract class Request<T, R extends Request> implements Cloneable {
                 params.put(key, value);
             } else {
                 Field field = value.getClass().getField("TYPE");
-                Class claz = (Class) field.get(null);
-                if (claz.isPrimitive()) {
+                Class clazz = (Class) field.get(null);
+                if (clazz!=null && clazz.isPrimitive()) {
                     params.put(key, value);
                 }
             }

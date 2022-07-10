@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 public class UrlCreator {
+
     public static String createUrlFromParams(String url, Map<String, Object> params) {
         StringBuilder builder = new StringBuilder();
         builder.append(url);

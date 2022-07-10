@@ -4,6 +4,7 @@ package com.jesen.cod.libnetwork.cache;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -15,8 +16,9 @@ import java.util.Date;
         {@ForeignKey(entity = User.class, parentColumns = "id", childColumns = "key",
                 onDelete = ForeignKey.RESTRICT, onUpdate = ForeignKey.SET_DEFAULT)}
                 ,indices = {@Index(value = {"key", "id"})})*/
-
-@Entity(tableName = "cache")
+// ForeignKey将表cache的id与user表的key字段关联，关联后的删除，升级，user表应该执行什么动作
+@Entity(tableName = "cache"/*, foreignKeys = {@ForeignKey(entity = User.class,parentColumns = "id"
+        ,childColumns = "key",onDelete = ForeignKey.RESTRICT,onUpdate = ForeignKey.SET_DEFAULT)}*/)
 public class Cache implements Serializable {
 
     //PrimaryKey 必须要有,且不为空,autoGenerate 主键的值是否由Room自动生成,默认false

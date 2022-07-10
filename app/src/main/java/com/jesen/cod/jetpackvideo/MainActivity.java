@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.jesen.cod.jetpackvideo.model.Destination;
 import com.jesen.cod.jetpackvideo.model.User;
 import com.jesen.cod.jetpackvideo.ui.login.UserManager;
@@ -40,7 +41,7 @@ import java.util.Map;
  * 3.底部导航栏 和 内容区域的 切换联动 使用NavController驱动
  * 4.底部导航栏 按钮个数和 内容区域destination个数。由注解处理器NavProcessor来收集,生成assetsdestination.json。
  */
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     private NavController navController;
     private AppBottomBar navView;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //NavGraphBuilder.build(navController);
         NavGraphBuilder.build(navController, fragment.getChildFragmentManager(), this, fragment.getId());
-        navView.setOnNavigationItemSelectedListener(this);
+        navView.setOnItemSelectedListener(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v->{
